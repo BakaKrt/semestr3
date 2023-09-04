@@ -69,24 +69,54 @@ void get_uniq_rand() {
 int main()
 {
     setlocale(0, "");
-
+    int choose;
     stack a, b;
-    get_uniq_rand();
-    for (int i = 0; i < 10; i++) {
-        if (i < 5)
-            a.push(uniqs[i]);
-        else
-            b.push(uniqs[i]);
+    printf("Выберите способ ввода колоды:\n1) Случайное распределение\n2) Ручной ввод\n");
+    cin >> choose;
+    if (choose == 1) {
+        get_uniq_rand();
+        for (int i = 0; i < 10; i++) {
+            if (i < 5)
+                a.push(uniqs[i]);
+            else
+                b.push(uniqs[i]);
+        }
+        cout << "********** стэк а" << endl;
+        a.print();
+        b.print();
+        cout << "********** стэк b" << endl;
+        printf("Пустые ли стеки: %d %d\n", a.empty(), b.empty());
     }
-    cout << "********** стэк а" << endl;
-    a.print();
-    b.print();
-    cout << "********** стэк b" << endl;
-    printf("Пустые ли стеки: %d %d\n", a.empty(), b.empty());
+    if (choose == 2) {
+        cout << "Ввод в обратном порядке(с конца до начала)\n";
+        int s = -1;
+        for (int i = 0; i < 5; i++) {
+            cout << "Введите значение карты колоды A: ";
+            cin >> s;
+            while (s > 10 || s < 0) {
+                cin >> s;
+            }
+            a.push(s);
+        }
+        for (int i = 0; i < 5; i++) {
+            cout << "Введите значение карты колоды B: ";
+            cin >> s;
+            while (s > 10 || s < 0) {
+                cin >> s;
+            }
+            b.push(s);
+        }
+        a.print();
+        b.print();
+    }
+    else {
+        cout << "Неправильный ввод! Попробуй снова: ";
+        cin >> choose;
+    }
 
     while (!a.empty() || !b.empty()) {
         stack a_, b_, _a, _b;
-        if ((a.stack_top() > b.stack_top()) || (a.stack_top() == 0)) {
+        if ((a.stack_top() > b.stack_top()) || (a.stack_top() == 0 && b.stack_top() == 9)) {
             printf("Выйграла колода a\n");
             a_.push(b.stack_top()); b.pop();
             a_.push(a.stack_top()); a.pop();
@@ -102,7 +132,7 @@ int main()
             b.print();
         }
 
-        if ((b.stack_top() > a.stack_top()) || (b.stack_top() == 0)) {
+        if ((b.stack_top() > a.stack_top()) || (b.stack_top() == 0 && a.stack_top() == 9)) {
             printf("Выйграла колода b\n");
             b_.push(a.stack_top()); a.pop();
             b_.push(b.stack_top()); b.pop();
