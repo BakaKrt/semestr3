@@ -9,8 +9,11 @@ using namespace std;
      std::cout << "\n{" #Expression "}: " << (Expression) << std::endl;
 
 class stack {
-    int stack_[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+    
+    private:
+        int k_number_of_stack = 0;
     public:
+        int stack_[10] = { -1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
         int empty() {
             short k = 0;
             for (int i = 0; i < 10; i++) {
@@ -49,10 +52,16 @@ class stack {
             }
             cout << endl;
         }
+        void print_2stack(stack x, stack y) {
+            for (int i = 0; i < 10; i++) {
+                printf("%d. %d\t\t%d. %d\n", i, x.stack_[i], i, y.stack_[i]);
+            }
+            cout << endl;
+        }
 };
 
 int uniq[10] = {-2}; //int uniq_calls = 0;
-int uniqs[10] = {};
+int uniqs[10] = {}; //массив с уникальными случайными значениями
 void get_uniq_rand() {
     srand(time(nullptr));
     for (int i = 0; i < 10; i++) {
@@ -61,7 +70,6 @@ void get_uniq_rand() {
             random = rand() % 10;
         }
         uniq[random] = random;
-        printf("%d %d %d\n", i, uniq[random], random);
         uniqs[i] = random;
     }
 }
@@ -73,6 +81,7 @@ int main()
     stack a, b;
     printf("Выберите способ ввода колоды:\n1) Случайное распределение\n2) Ручной ввод\n");
     cin >> choose;
+    system("cls");
     if (choose == 1) {
         get_uniq_rand();
         for (int i = 0; i < 10; i++) {
@@ -81,13 +90,11 @@ int main()
             else
                 b.push(uniqs[i]);
         }
-        cout << "********** стэк а" << endl;
-        a.print();
-        b.print();
-        cout << "********** стэк b" << endl;
-        printf("Пустые ли стеки: %d %d\n", a.empty(), b.empty());
+        cout << "Начальное положение колод\nСтек А: \t Стек B:\n";
+        a.print_2stack(a,b);
+        cout << "===========================\n";
     }
-    if (choose == 2) {
+    else if (choose == 2) {
         cout << "Ввод в обратном порядке(с конца до начала)\n";
         int s = -1;
         for (int i = 0; i < 5; i++) {
@@ -117,7 +124,7 @@ int main()
     while (!a.empty() || !b.empty()) {
         stack a_, b_, _a, _b;
         if ((a.stack_top() > b.stack_top()) || (a.stack_top() == 0 && b.stack_top() == 9)) {
-            printf("Выйграла колода a\n");
+            printf("Выйграла колода A\n");
             a_.push(b.stack_top()); b.pop();
             a_.push(a.stack_top()); a.pop();
             
@@ -125,15 +132,12 @@ int main()
                 _a.push(a.pop());
             while (!(_a.empty()))
                 a_.push(_a.pop());
-            cout << "Рисуем a: \n";
-            a_.print();
+            cout << "Стек А: \t Стек B:\n";
             a = a_;
-            cout << "Рисуем b: \n";
-            b.print();
+            a.print_2stack(a, b);
         }
-
-        if ((b.stack_top() > a.stack_top()) || (b.stack_top() == 0 && a.stack_top() == 9)) {
-            printf("Выйграла колода b\n");
+        else if ((b.stack_top() > a.stack_top()) || (b.stack_top() == 0 && a.stack_top() == 9)) {
+            printf("Выйграла колода B\n");
             b_.push(a.stack_top()); a.pop();
             b_.push(b.stack_top()); b.pop();
 
@@ -141,18 +145,17 @@ int main()
                 _b.push(b.pop());
             while (!(_b.empty()))
                 b_.push(_b.pop());
-            cout << "Рисуем b: \n";
-            b_.print();
+            cout << "Стек А: \t Стек B:\n";
             b = b_;
-            cout << "Рисуем a: \n";
-            a.print();
+            a.print_2stack(a, b);
         }
         cout << "###############" << endl;
         if ((a.empty()) || (b.empty())) break;
     }
-    cout << "\n***********\n";
-    a.print();
-    b.print();
-    cout << "\n***********\n";
+    cout << "Конечный результат\n";
+    cout << "======================\n\n";
+    cout << "Стек A\t\tСтек B\n";
+    a.print_2stack(a, b);
+    cout << "======================\n";
 
 }
