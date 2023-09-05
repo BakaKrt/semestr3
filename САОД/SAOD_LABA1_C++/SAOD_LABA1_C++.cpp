@@ -8,8 +8,7 @@ using namespace std;
 #define debug(Expression)\
      std::cout << "\n{" #Expression "}: " << (Expression) << std::endl;
 
-class stack {
-    
+class stack {    
     private:
         int k_number_of_stack = 0;
     public:
@@ -157,5 +156,4 @@ int main()
     cout << "Стек A\t\tСтек B\n";
     a.print_2stack(a, b);
     cout << "======================\n";
-
 }
