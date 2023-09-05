@@ -17,8 +17,6 @@ public:
         STACK = new string[input.size()];
         len = input.size();
     }
-    
-
     int empty() {
         short k = 0;
         for (int i = 0; i < len; i++) {
@@ -28,7 +26,6 @@ public:
         return true;
     }
     void push(string x) {
-        //debug(STACK[0].size());
         if (STACK[0].size() > 0) {
             for (int i = len-2; i > -1; i--) {
                 STACK[i + 1] = STACK[i];
@@ -52,7 +49,6 @@ public:
     }
     void print() {
         for (int i = 0; i < len; i++) {
-            //printf("%d. %s\n", i, STACK[i]);
             cout << i << ". " << STACK[i] << endl;
         }
         cout << endl;
@@ -72,8 +68,6 @@ int main()
 {
     setlocale(0, "");
     string input = "*–*–+ab*cde–fg+hi";
-
-    //reverse(input.begin(), input.end());
     stack a; a.set_len(input);
     stack b; b.set_len(input);
     cout << input << " " << input.size() << endl;
@@ -98,14 +92,13 @@ int main()
             is_word = false;
             b.push(temp);
             temp.clear();
-            a.print();
+            //a.print();
         }
         if (is_word) {
             b.push(a_);
-            a.print();
+            //a.print();
         }
     }
-    b.print();
+    //b.print();
     cout << "Ответ: " << b.stack_top();
-
 }
