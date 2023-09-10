@@ -1,3 +1,5 @@
+print("Проверка")
+
 class stek:
     stek_ = [None] * 5;
     def is_empty(stek_):
@@ -16,6 +18,6 @@ class stek:
     
 
 a = stek
-print(a.is_empty(a))
-a.push_back(15)
-print(a.is_empty(a))
+#print(a.is_empty(a))
+a.push_back(a, 15)
+#print(a.is_empty(a))
