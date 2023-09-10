@@ -1,67 +1,93 @@
 ﻿#include <iostream>
+#include <string>
 #include <vector>
-
+#include <stack>
+//#include <bits/stdc++.h>
 using namespace std;
 
-class bin_tree {
-public:
-    int x = NULL;
-    bin_tree* left = NULL;
-    bin_tree* right = NULL;
 
-    bin_tree *add(bin_tree *tree,int in) {
-        if (tree == NULL) {
-            tree = new bin_tree;
-            tree->left = NULL;
-            tree->right = NULL;
-            tree->x = in;
-        }
-        else if (in < tree->x) {
-            tree->left = add(tree->left, in);
-            tree->left->x = in;
-        }
-        else {
-            tree->right = add(tree->right, in);
-            tree->right->x = in;
-        }
-        return tree;
-    }
-    /*~bin_tree() {
-
-    }*/
-} root;
-
-double sr_mat(bin_tree A) {
-    vector<int> znach = {};
-    cout << A.x << endl;
-    while (A.x != NULL) {
-        if (A.left != NULL) {
-            cout << "левое не пустое" << endl;
-            znach.push_back(A.left->x);
-        }
-        else if (A.right != NULL) {
-            cout << "правое не пустое" << endl;
-            znach.push_back(A.right->x);
-        }
-        cout << "Ты в пиве\n";
-    }
-    double rez=0;
-    for (const auto& a : znach) {
-        rez += a;
-    }
-    cout << rez;
-    return rez / znach.size();
+typedef struct node {
+	int data;
+	struct node* left;
+	struct node* right;
+}node;
+node* newnode(int d) {
+	node* temp = new node;
+	temp->data = d;
+	temp->left = NULL;
+	temp->right = NULL;
+	return temp;
+}
+node* insert(node* root, int d) {
+	if (root == NULL) {
+		return newnode(d);
+	}
+	else if (d < root->data) {
+		root->left = insert(root->left, d);
+	}
+	else {
+		root->right = insert(root->right, d);
+	}
+	return root;
+}
+void inorder(node* root) {
+	if (root != NULL) {
+		inorder(root->left);
+		cout << root->data << " ";
+		inorder(root->right);
+	}
 }
 
-int main()
-{
-    setlocale(0, "");
-    root.x = -1;
-    bin_tree a;
-    root.add(&a, 12);
-    root.add(&a, -1);
-    printf("Left: %d \t Right: %d\n", a.left->x, a.right->x);
-    root.add(a.left, 100);
-    root.add(a.left->left, 1);
-    cout << sr_mat(root);
+
+double average(node* root) {
+	stack<node*> st;
+	node* curr;
+	double sum = 0, count = 0;
+	
+	st.push(root);
+	while (!st.empty()) {
+		curr = st.top();
+		st.pop();
+		sum += curr->data; count++;
+		if (curr != NULL) {
+			if (curr->left != NULL)
+				st.push(curr->left);
+
+			if (curr->right != NULL)
+				st.push(curr->right);
+		}
+	}
+	printf("sum %f count %f\n", sum, count);
+	return sum / count;
+}
+
+
+
+string get_input_numbers() {
+	char a = '0'; string out = "";
+	while (a != 10) {
+		a = getchar();
+		if (a > 47 && a < 58) {
+			out += a;
+		}
+	}
+	if (out.empty()) {
+		out = "-1";
+	}
+	return out;
+}
+
+int main() {
+	setlocale(0, "");
+	node* root = NULL;
+
+	string in;
+	while (in != "-1") {
+		in = get_input_numbers();
+		if (in == "-1") break;
+		root = insert(root, stoi(in));
+	}
+
+	inorder(root);
+	printf("Среднее арифметическое: %f", average(root));
 }
