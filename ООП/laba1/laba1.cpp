@@ -7,10 +7,6 @@ struct primer1 {
 	int pole1 = 10;
 	bool x = false;
 	wchar_t abc = 'abc';
-	/*struct zxc {
-		int pole2 = -10;
-		string x_ = "false";
-	} podpole;	*/
 } pole;
 
 struct PUST {
@@ -20,10 +16,25 @@ struct PUST {
 enum error{ERR_READ, ERR_WRITE, ERR_CONVERT};
 enum error_{_ERR_READ = -1, _ERR_WRITE = -2, _ERR_CONVERT = 100};
 
+void p1() {
+	printf("Пункт #1\n");
+	printf("Количество байт для основных типов: int %d, char %d, wchar_t %d, bool %d, float %d, double %d\n\n", \
+		sizeof(int), sizeof(char), sizeof(wchar_t), sizeof(bool), sizeof(float), sizeof(double));
+}
+
+void p2() {
+	typedef wchar_t WCH;
+	typedef long double LLD;
+	printf("Пункт #2\n");
+	printf("Размер wchar_t до преобразования: %d; и после: %d\n", sizeof(wchar_t), sizeof(WCH));
+	printf("Размер long double до преобразования: %d; и после: %d\n", sizeof(long double), sizeof(LLD));
+}
+	
 int main()
 {
 	setlocale(0, "");
-
+	p1();
+	p2();
 	int i;
 	char c;
 	wchar_t wch;
