@@ -57,7 +57,7 @@ double average(node* root) {
 				st.push(curr->right);
 		}
 	}
-	printf("sum %f count %f\n", sum, count);
+	//printf("sum %f count %f\n", sum, count);
 	return sum / count;
 }
 
@@ -67,12 +67,13 @@ string get_input_numbers() {
 	char a = '0'; string out = "";
 	while (a != 10) {
 		a = getchar();
-		if (a > 47 && a < 58) {
+		if (a == 32) break;
+		else if (a > 47 && a < 58 || a == 45) {
 			out += a;
 		}
 	}
 	if (out.empty()) {
-		out = "-1";
+		out = "#";
 	}
 	return out;
 }
@@ -82,9 +83,9 @@ int main() {
 	node* root = NULL;
 
 	string in;
-	while (in != "-1") {
+	while (in != "#") {
 		in = get_input_numbers();
-		if (in == "-1") break;
+		if (in == "#") break;
 		root = insert(root, stoi(in));
 	}
 

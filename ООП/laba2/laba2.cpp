@@ -4,8 +4,8 @@
 
 using namespace std;
 
-int factorial(int f) {
-    int res = 1;
+double factorial(double f) {
+    double res = 1;
     for (int i = 1; i <= f; i++) {
         res *= i;
     }
@@ -15,9 +15,8 @@ int factorial(int f) {
 int main() {
 
     setlocale(0, "");
-    //cout << factorial(3);
     long double x1, x2, dx;
-    long double eps = (1e-2);
+    double eps = (1e-4);
 
     cin >> x1 >> x2 >> dx;
 
@@ -27,7 +26,7 @@ int main() {
 
         long double calc = 0;
         long double result = 0;
-        int n = 0;
+        int n = 0; bool skip = false;
 
         do {
             calc += result;
@@ -36,7 +35,6 @@ int main() {
         } while (fabs(result) >= eps);
 
         if (x == x1) cout << "\n";
-        //calc = 1 + calc;
         cout << fixed << "     " << left << setw(23) << x << setw(24) << calc << setw(28) << sin(x)/x << setw(25) << n << endl;
     }
 }
