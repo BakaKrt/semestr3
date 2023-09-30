@@ -70,7 +70,7 @@ int main()
     string input = "*–*–+ab*cde–fg+hi";
     stack a; a.set_len(input);
     stack b; b.set_len(input);
-    cout << input << " " << input.size() << endl;
+    cout << input << " " /* << input.size()*/ << endl;
     for (int i = 0; i < input.size(); i++) {
         string temp; temp += input[i];
         a.push(temp);
