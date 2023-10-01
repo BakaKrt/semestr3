@@ -92,13 +92,10 @@ int main()
             is_word = false;
             b.push(temp);
             temp.clear();
-            //a.print();
         }
         if (is_word) {
             b.push(a_);
-            //a.print();
         }
     }
-    //b.print();
     cout << "Ответ: " << b.stack_top();
 }
