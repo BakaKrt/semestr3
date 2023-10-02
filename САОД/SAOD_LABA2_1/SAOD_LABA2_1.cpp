@@ -57,7 +57,6 @@ double average(node* root) {
 				st.push(curr->right);
 		}
 	}
-	//printf("sum %f count %f\n", sum, count);
 	return sum / count;
 }
 
