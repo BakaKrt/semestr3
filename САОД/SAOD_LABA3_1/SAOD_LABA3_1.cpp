@@ -22,10 +22,6 @@ pole rand_vec() {
         auto it = std::remove(hodi_.begin(), hodi_.end(), a.back());
         hodi_.erase(it, hodi_.end());
     }
-    for (const auto& a_ : a) {
-        //cout << a_.first << " " << a_.second << endl;
-    }
-    //cin.get();
     return a;
 }
 
@@ -39,7 +35,7 @@ int vec_sum(vector<vector<int>> &a) {
     return k;
 }
 
-void print_doska(vector<vector<int>> a, int pos_y = -1, int pos_x = -1) {
+void print_doska(vector<vector<int>> a, int pos_y = -10, int pos_x = -10, int prevY = -10, int prevX = -10) {
     int y = 0;
     for (const auto& a_ : a) {
         int x = 0;
@@ -93,18 +89,23 @@ int path_exist(vector<vector<pair<int, int>>> &in, vector<pair<int,int>> &in_) {
     return 0;
 }
 
-void doska_resh(vector<vector<int>> v, int nachY, int nachX, int konY, int konX) {
+void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &konX) {
     int cant_go = 0; int TOTAL_ERRORS = 0;
     vector<pole> all_path; pole path;
-    for (int y = nachY; y < v.size(); y++) {
-        for (int x = nachX; x < v[y].size(); x++) {
+    for (int y = nachY; y <= v.size();) {
+        for (int x = nachX; x <= v[y].size();) {
             while (TOTAL_ERRORS < 100000) {
                 for (const auto& a : rand_vec()) {
-                    if (y + a.first >= 0 && x + a.second >= 0 && y + a.first < 8 && x + a.second < 8 && v[y + a.first][x + a.second] != 1) {
+                    if ((y + a.first >= 0 && y + a.first < 8 && x + a.second >= 0 && x + a.second < 8) && v[y + a.first][x + a.second] != 1) {
                         cant_go = 0;
-                        y += a.first; x += a.second;
-                        v[y][x] = 1; VSE_HODI++;
+                        printf("до: \t %d %d\n", y,x);
+                        y += a.first;
+                        x += a.second;
+                        printf("после: \t %d %d\n", y, x);
+                        v[y][x] = 1;
                         path.push_back(a);
+                        print_doska(v, y, x);
+                        printf("y%d x%d %d %d y_n%d x_n%d\n",y,x,a.first,a.second,nachY, nachY);
                         if (y == konY && x == konX) {
                             if (all_path.size() == 0) {
                                 all_path.push_back(path);
@@ -115,8 +116,14 @@ void doska_resh(vector<vector<int>> v, int nachY, int nachX, int konY, int konX)
                                     all_path.push_back(path);
                                     print_doska(v, y, x);
                                     printf("Размер path: %d\n", path.size());
+                                    for (auto& a_ : path) {
+                                        printf("Путь: %d %d\n",a_.first, a_.second);
+                                    }
+                                    cin.get();
                                     path.clear();
                                     TOTAL_ERRORS = 0;
+                                    clear_doska(v, nachY, nachX);
+                                    x = nachX; y = nachY;
                                 }
                             }
                         }
@@ -126,6 +133,7 @@ void doska_resh(vector<vector<int>> v, int nachY, int nachX, int konY, int konX)
                         if (cant_go > 17) {
                             path.clear();
                             clear_doska(v, nachY, nachX);
+                            x = nachX; y = nachY;
                             cant_go = 0;
                             TOTAL_ERRORS++;
                             break;
@@ -140,17 +148,16 @@ void doska_resh(vector<vector<int>> v, int nachY, int nachX, int konY, int konX)
 }
 
 int main() {
-    //pole hodi = { {-2,1},{-2,-1},{-1,2},{1,2},{2,1},{2,-1},{-1,-2},{1,-2} };
     setlocale(0, "");
     printf("Введите две пары чисел: {начY,начX} {конY,конX}: \n");
     int nachY, nachX, konY, konX;
-    nachY = 3; nachX = 4; konY = 7; konX = 0;
+    nachY = 7; nachX = 7; konY = 0; konX = 7;
     //cin >> nachY >> nachX >> konY >> konX; //не удалять
 
     
     vector<vector<int>> DOSKA(8, {0,0,0,0,0,0,0,0});
-    pair<int, int> kin_pos = {nachY,nachX};
-    DOSKA[kin_pos.first][kin_pos.second] = 1;
+    DOSKA[nachY][nachX] = 1;
+    DOSKA[konY][konX] = 2;
 
     print_doska(DOSKA);
     cout <<endl;
