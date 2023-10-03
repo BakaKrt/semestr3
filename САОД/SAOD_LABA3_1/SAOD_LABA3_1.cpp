@@ -92,20 +92,21 @@ int path_exist(vector<vector<pair<int, int>>> &in, vector<pair<int,int>> &in_) {
 void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &konX) {
     int cant_go = 0; int TOTAL_ERRORS = 0;
     vector<pole> all_path; pole path;
-    for (int y = nachY; y <= v.size();) {
-        for (int x = nachX; x <= v[y].size();) {
-            while (TOTAL_ERRORS < 100000) {
+    
+    while (TOTAL_ERRORS < 10000) {
+        for (int y = nachY; y <= v.size();) {
+            for (int x = nachX; x <= v[y].size();) {
                 for (const auto& a : rand_vec()) {
                     if ((y + a.first >= 0 && y + a.first < 8 && x + a.second >= 0 && x + a.second < 8) && v[y + a.first][x + a.second] != 1) {
                         cant_go = 0;
-                        printf("до: \t %d %d\n", y,x);
+                        //printf("до: \t %d %d\n", y,x);
                         y += a.first;
                         x += a.second;
-                        printf("после: \t %d %d\n", y, x);
+                        //printf("после: \t %d %d\n", y, x);
                         v[y][x] = 1;
                         path.push_back(a);
-                        print_doska(v, y, x);
-                        printf("y%d x%d %d %d y_n%d x_n%d\n",y,x,a.first,a.second,nachY, nachY);
+                        //print_doska(v, y, x);
+                        //printf("y%d x%d %d %d y_n%d x_n%d\n",y,x,a.first,a.second,nachY, nachY);
                         if (y == konY && x == konX) {
                             if (all_path.size() == 0) {
                                 all_path.push_back(path);
@@ -117,9 +118,9 @@ void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &
                                     print_doska(v, y, x);
                                     printf("Размер path: %d\n", path.size());
                                     for (auto& a_ : path) {
-                                        printf("Путь: %d %d\n",a_.first, a_.second);
+                                        //printf("Путь: %d %d\n",a_.first, a_.second);
                                     }
-                                    cin.get();
+                                    //cin.get();
                                     path.clear();
                                     TOTAL_ERRORS = 0;
                                     clear_doska(v, nachY, nachX);
@@ -141,10 +142,9 @@ void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &
                     }
                 }
             }
-            
         }
+        cout << endl << all_path.size() << endl;
     }
-    cout << endl << all_path.size() << endl;
 }
 
 int main() {
