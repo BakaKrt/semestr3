@@ -48,7 +48,7 @@ int main()
         }
     }
 
-    for (const auto& x : mas) {
-        cout << x << endl;
-    }
+    //for (const auto& x : mas) {
+    //    cout << x << endl;
+    //}
 }
