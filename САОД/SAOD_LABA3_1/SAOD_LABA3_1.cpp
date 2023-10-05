@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 #include <random>
 #include <ctime>
@@ -43,7 +44,11 @@ void print_doska(vector<vector<int>> a, int pos_y = -10, int pos_x = -10, int pr
             if (y == pos_y && x == pos_x) {
                 cout << "\x1b[42m" << b_ << "\x1b[40m ";
             }
-            else cout << b_ << " ";
+            else if (y == prevY && x == prevX) {
+                cout << "\x1b[44m" << b_ << "\x1b[40m ";
+            }
+            else
+                cout << b_ << " ";
             x++;
         }
         cout << endl;
@@ -89,15 +94,16 @@ int path_exist(vector<vector<pair<int, int>>> &in, vector<pair<int,int>> &in_) {
     return 0;
 }
 
-void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &konX) {
-    int cant_go = 0; int TOTAL_ERRORS = 0;
-    vector<pole> all_path; pole path;
+int doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &konX) {
+    int cant_go = 0; int TOTAL_ERRORS = 0; int in_vec_size = v.size();
+    vector<pole> all_path; pole path; int err_l = in_vec_size * in_vec_size * 200;
     
-    while (TOTAL_ERRORS < 10000) {
-        for (int y = nachY; y <= v.size();) {
-            for (int x = nachX; x <= v[y].size();) {
+    
+    for (int y = nachY; y <= v.size();) {
+        for (int x = nachX; x <= v[y].size();) {
+            while (TOTAL_ERRORS < 100000) {
                 for (const auto& a : rand_vec()) {
-                    if ((y + a.first >= 0 && y + a.first < 8 && x + a.second >= 0 && x + a.second < 8) && v[y + a.first][x + a.second] != 1) {
+                    if ((y + a.first >= 0 && y + a.first < in_vec_size && x + a.second >= 0 && x + a.second < in_vec_size) && v[y + a.first][x + a.second] != 1) {
                         cant_go = 0;
                         //printf("до: \t %d %d\n", y,x);
                         y += a.first;
@@ -110,13 +116,15 @@ void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &
                         if (y == konY && x == konX) {
                             if (all_path.size() == 0) {
                                 all_path.push_back(path);
+                                print_doska(v, y, x, y-a.first,x-a.second);
+                                printf("Размер path: %d\nколичество комбинаций: %d\n", path.size(), all_path.size());
                                 path.clear();
                             }
                             else {
                                 if (path_exist(all_path, path) == 1) {
                                     all_path.push_back(path);
-                                    print_doska(v, y, x);
-                                    printf("Размер path: %d\n", path.size());
+                                    print_doska(v, y, x, y - a.first, x - a.second);
+                                    printf("Размер path: %d\nколичество комбинаций: %d\n", path.size(),all_path.size());
                                     for (auto& a_ : path) {
                                         //printf("Путь: %d %d\n",a_.first, a_.second);
                                     }
@@ -137,30 +145,33 @@ void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &
                             x = nachX; y = nachY;
                             cant_go = 0;
                             TOTAL_ERRORS++;
-                            break;
+                            continue;
                         }
                     }
                 }
+                //cout << endl << all_path.size() << endl;
             }
+            return all_path.size();
         }
-        cout << endl << all_path.size() << endl;
     }
+    cout << endl << all_path.size() << endl;
+    return all_path.size();
 }
 
 int main() {
     setlocale(0, "");
     printf("Введите две пары чисел: {начY,начX} {конY,конX}: \n");
     int nachY, nachX, konY, konX;
-    nachY = 7; nachX = 7; konY = 0; konX = 7;
+    nachY = 3; nachX = 3; konY = 0; konX = 0;
     //cin >> nachY >> nachX >> konY >> konX; //не удалять
 
     
-    vector<vector<int>> DOSKA(8, {0,0,0,0,0,0,0,0});
+    vector<vector<int>> DOSKA(4, { 0,0,0,0 });
     DOSKA[nachY][nachX] = 1;
     DOSKA[konY][konX] = 2;
 
     print_doska(DOSKA);
     cout <<endl;
 
-    doska_resh(DOSKA, nachY, nachX, konY, konX);
+    printf("\nКоличество путей: %d",doska_resh(DOSKA, nachY, nachX, konY, konX));
 }
