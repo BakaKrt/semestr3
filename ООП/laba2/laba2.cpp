@@ -15,18 +15,18 @@ double factorial(double f) {
 int main() {
 
     setlocale(0, "");
-    long double x1, x2, dx;
-    double eps = (1e-4);
-
+    long double x1, x2, dx; ;
+    double eps = (1e-5); 
+    printf("Введите А и B, с шагом в dx: ");
     cin >> x1 >> x2 >> dx;
 
     cout << left << setw(25) << "    Значение x" << setw(24) << "Прибл-ое зн-ие" << setw(25) << "Настоящее зн-ие" << setw(25) << "Кол-во эл-тов\n";
 
     for (double x = x1; x <= x2; x += dx) {
 
-        long double calc = 0;
-        long double result = 0;
-        int n = 0; bool skip = false;
+        double calc = 0;
+        double result = 0;
+        int n = 0;
 
         do {
             calc += result;
@@ -34,7 +34,8 @@ int main() {
             n++;
         } while (fabs(result) >= eps);
 
-        if (x == x1) cout << "\n";
+        if (x == x1)
+            cout << "\n";
         cout << fixed << "     " << left << setw(23) << x << setw(24) << calc << setw(28) << sin(x)/x << setw(25) << n << endl;
     }
 }
