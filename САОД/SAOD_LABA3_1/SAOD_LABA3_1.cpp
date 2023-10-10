@@ -39,17 +39,29 @@ int vec_sum(vector<vector<int>> &a) {
     return k;
 }
 
-void print_doska(vector<vector<int>> a, int pos_y = -10, int pos_x = -10, int prevY = -10, int prevX = -10, vector<int> path_c = {-1}) {
-    int y = 0; string color = "\x1b[38;5;"; int k = 0;
+//vector<int> create_color_path(vector<int> a) {
+
+//}
+
+void print_doska(vector<vector<int>> &a, int pos_y = -10, int pos_x = -10, int prevY = -10, int prevX = -10, vector<int> path_c = { -1 }) {
+    int y = 0; string color = "\x1b[38;5;"; int k = 0; short a_size = a[0].size();
+    cout << "Это size: " << a_size << endl;
     for (const auto& a_ : a) {
         int x = 0;
         for (const auto& b_ : a_) {
+            short pos = x * a_size + y;
+            if (pos <= path_c.size() && path_c.at(pos) != -1) {
+                string color = "\x1b[38;5;" + to_string(path_c.at(pos)) + "m";
+                cout << color << b_ << "\x1b[40m ";
+            }
+            /*
             if (y == pos_y && x == pos_x) {
                 cout << "\x1b[42m" << b_ << "\x1b[40m ";
             }
             else if (y == prevY && x == prevX) {
                 cout << "\x1b[44m" << b_ << "\x1b[40m ";
-            }
+            }*/
+            else cout << b_ << " ";
             
             x++;
             k++;
@@ -119,15 +131,26 @@ int path_exist(vector<vector<pair<int, int>>> &in, vector<pair<int,int>> &in_) {
 }
 
 vector<int> color_path(vector<pair<int, int>> &path, int &nachX, int &nachY, short size) {
-    int cur_x = nachX; int cur_y = nachY; vector<int> c_path(size * size, {});
+    int cur_x = nachX; int cur_y = nachY; vector<int> c_path(size*size);
     int color = 1;
+    printf("DEBUG:\npath size: %d\nnachX:%d\tnachY:%d\nsize:%d",path.size(),nachX,nachY,size);
+    cin.get(); 
     for (auto& p : path) {
         cur_y += p.first;
         cur_x += p.second;
-        c_path.insert(c_path.begin() + (cur_x * size) + (cur_y + 1), color);
+        printf("curX:%d\tcurY:%d\t:%d\n",cur_x, cur_y, (cur_x * size) + (cur_y));
+        c_path[(cur_x * size) + (cur_y)] = color;
+        color++;
+    }
+    int sc = 0;
+    for (auto& p : c_path) {
+        printf("%d: %d\n", sc,p);
+        sc++;
     }
     return c_path;
 }
+
+
 
 void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &konX) {
     int cant_go = 0; int TOTAL_ERRORS = 0; int in_vec_size = v.size();
@@ -201,7 +224,7 @@ int main() {
 
     doska_resh(DOSKA, nachY, nachX, konY, konX);
 
-    std::thread potok1([&]() {
+    /*std::thread potok1([&]() {
         doska_resh(DOSKA, nachY, nachX, konY, konX);
     });
     std::thread potok2([&]() {
@@ -209,7 +232,7 @@ int main() {
     });
     potok1.join();
     potok2.join();
-    
+    */
     //potok1.join();
     printf("\nКоличество путей: %d",all_path.size());
 }
