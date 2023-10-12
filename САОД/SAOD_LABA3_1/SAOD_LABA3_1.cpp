@@ -1,12 +1,14 @@
 ﻿#include <iostream>
 #include <vector>
 #include <algorithm>
+#include <iterator>
 #include <string>
 
 #include <random>
 #include <ctime>
 #include <cstdlib>
 #include <thread>
+#include <mutex>
 
 using namespace std;
 
@@ -19,6 +21,8 @@ vector<pole> all_path;
 int GLOBAL_RESH = 0;
 
 pole rand_vec() {
+    //mutex mtx;
+    //mtx.lock();
     srand(time(nullptr));
     pole a, hodi_ = hodi;
     for (int i = 0; i < 8; i++) {
@@ -26,6 +30,20 @@ pole rand_vec() {
         auto it = std::remove(hodi_.begin(), hodi_.end(), a.back());
         hodi_.erase(it, hodi_.end());
     }
+    //mtx.unlock();
+    return a;
+}
+pole rand_vec_() {
+    //mutex mtx;
+    //mtx.lock();
+    srand(time(nullptr));
+    pole a, hodi_ = hodi;
+    for (int i = 0; i < 8; i++) {
+        a.push_back(hodi_[rand() % hodi_.size()]);
+        auto it = std::remove(hodi_.begin(), hodi_.end(), a.back());
+        hodi_.erase(it, hodi_.end());
+    }
+    //mtx.unlock();
     return a;
 }
 
@@ -42,7 +60,7 @@ int vec_sum(vector<vector<int>> &a) {
 
 void print_doska(vector<vector<int>> &a, int pos_y = -10, int pos_x = -10, int prevY = -10, int prevX = -10) {
     int y = 0; string color = "\x1b[38;5;"; int k = 0; short a_size = a[0].size();
-    cout << "Это size: " << a_size << endl;
+    //cout << "Это size: " << a_size << endl;
     for (const auto& a_ : a) {
         int x = 0;
         for (const auto& b_ : a_) {
@@ -78,12 +96,9 @@ void clear_doska(vector<vector<int>> &a, int pos_y=0, int pos_x=0) {
     }
 }
 
-void print_path(vector<vector<pair<int,int>>> in) {
+void print_path(vector<pair<int,int>> in) {
     for (const auto& a : in) {
-        for (const auto& b : a) {
-            printf("%d\t%d\n", b.first,b.second);
-        }
-        cout << endl;
+        printf("%d %d\t", a.first,a.second);
     }
     cout << endl;
 }
@@ -112,7 +127,7 @@ int path_exist(vector<vector<pair<int, int>>> &in, vector<pair<int,int>> &in_) {
                     k++;
             }
         }
-        });
+    });
 
     t1.join();
     t2.join();
@@ -123,51 +138,134 @@ int path_exist(vector<vector<pair<int, int>>> &in, vector<pair<int,int>> &in_) {
 
 
 void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &konX) {
-    int cant_go = 0; int TOTAL_ERRORS = 0; int in_vec_size = v.size();
-    pole path; int err_l = in_vec_size * in_vec_size * 200;
-    
-    for (int y = nachY; in_vec_size;) {
-        for (int x = nachX; x <= in_vec_size;) {
+    int cant_go = 0, cant_go1 = 0; int TOTAL_ERRORS = 0; int in_vec_size = v.size();
+    pole path, path1; int err_l = in_vec_size * in_vec_size * 200;
+    vector<vector<int>> v_; copy(v.begin(), v.end(), back_inserter(v_));
+    mutex mtx;
+
+    print_doska(v_);
+    for (int y = nachY, y1 = nachY; y <= in_vec_size, y1 <= in_vec_size;) {
+        for (int x = nachX, x1 = nachX; x <= in_vec_size, x1 <= in_vec_size;) {
             while (TOTAL_ERRORS <= 900000) {
-                for (const auto& a : rand_vec()) {
-                    if ((y + a.first >= 0 && y + a.first < in_vec_size && x + a.second >= 0 && x + a.second < in_vec_size) && v[y + a.first][x + a.second] != 1) {
-                        cant_go = 0;
-                        y += a.first;
-                        x += a.second;
-                        v[y][x] = 1;
-                        path.push_back(a);
-                        if (y == konY && x == konX) {
-                            if (all_path.size() == 0) {
-                                all_path.push_back(path);
-                                print_doska(v, y, x, y - a.first, x - a.second);
-                                printf("Размер path: %d\nколичество комбинаций: %d\n", path.size(), all_path.size());
-                                path.clear();
-                            }
-                            else {
-                                if (path_exist(all_path, path) == 1) {
-                                    all_path.push_back(path);
-                                    print_doska(v, y, x, y - a.first, x - a.second);
-                                    printf("Размер path: %d\nколичество комбинаций: %d\n", path.size(),all_path.size());
-                                    path.clear();
-                                    TOTAL_ERRORS = 0;
-                                    clear_doska(v, nachY, nachX);
-                                    x = nachX; y = nachY;
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        cant_go++;
-                        if (cant_go > 17) {
-                            path.clear();
-                            clear_doska(v, nachY, nachX);
-                            x = nachX; y = nachY;
+                thread p1([&]() {
+                    //cout << "Поток 1{\n";
+                    for (const auto& a : rand_vec()) {
+                        if ((y + a.first >= 0 && y + a.first < in_vec_size && x + a.second >= 0 && x + a.second < in_vec_size) && v[y + a.first][x + a.second] != 1) {
                             cant_go = 0;
-                            TOTAL_ERRORS++;
-                            continue;
+                            y += a.first;
+                            x += a.second;
+                            v[y][x] = 1;
+                            mtx.lock();
+                            path.push_back(a);
+                            mtx.unlock();
+                            //printf("Добавили в path , size(%d), a{%d,%d}\n", path.size(), a.first, a.second);
+                            if (y == konY && x == konX) {
+                                mtx.lock();
+                                //printf("Текущий поток 1: %d, захватили mutex\n", this_thread::get_id());
+                                if (all_path.size() == 0) {
+                                    all_path.push_back(path);
+                                    cout << "Доска 1:\n";
+                                    print_doska(v, y, x, y - a.first, x - a.second);
+                                    printf("Размер path: %d\nколичество комбинаций: %d\n", path.size(), all_path.size());
+                                    path.clear();
+                                    //printf("Текущий поток 1: %d, разблокирую mutex\n", this_thread::get_id());
+                                }
+                                else {
+                                    //printf("Текущий поток 1: %d, захватили mutex\n", this_thread::get_id());
+                                    if (path_exist(all_path, path) == 1) {
+                                        all_path.push_back(path);
+                                        cout << "Доска 1:\n";
+                                        print_doska(v, y, x, y - a.first, x - a.second);
+                                        printf("Размер path: %d\nколичество комбинаций: %d\n", path.size(), all_path.size());
+                                        //cout << "Путь 1:\n";
+                                        //print_path(path);
+                                        path.clear();
+                                        TOTAL_ERRORS = 0;
+                                        clear_doska(v, nachY, nachX);
+                                        x = nachX; y = nachY;
+                                    }
+                                }
+                                //printf("Текущий поток 1: %d, разблокировал mutex\n", this_thread::get_id());
+                                mtx.unlock();
+                            }
+                        }
+                        else {
+                            cant_go++;
+                            if (cant_go > 9) {
+                                //cout << "Путь 1: \n";
+                                //print_path(path);
+                                //printf("Очистили path\n");
+                                path.clear();
+                                clear_doska(v, nachY, nachX);
+                                x = nachX; y = nachY;
+                                cant_go = 0;
+                                TOTAL_ERRORS++;
+                                //continue;
+                            }
                         }
                     }
-                }
+                });
+                thread p2([&]() {
+                    for (const auto& a : rand_vec_()) {
+                        if ((y1 + a.first >= 0 && y1 + a.first < in_vec_size && x1 + a.second >= 0 && x1 + a.second < in_vec_size) && v_[y1 + a.first][x1 + a.second] != 1) {
+                            cant_go1 = 0;
+                            y1 += a.first;
+                            x1 += a.second;
+                            v_[y1][x1] = 1;
+                            mtx.lock();
+                            path1.push_back(a);
+                            mtx.unlock();
+                            //printf("Добавили в path1, size(%d), a{%d,%d}\n", path1.size(), a.first, a.second);
+                            if (y1 == konY && x1 == konX) {
+                                mtx.lock();
+                                //printf("Текущий поток 2: %d, захватили mutex\n", this_thread::get_id());
+                                if (all_path.size() == 0) {
+                                    all_path.push_back(path1);
+                                    cout << "Доска 2:\n";
+                                    print_doska(v_, y1, x1, y1 - a.first, x1 - a.second);
+                                    printf("Размер path1: %d\nколичество комбинаций: %d\n", path1.size(), all_path.size());
+                                    path1.clear();
+                                    //printf("Текущий поток 2: %d, разблокирую mutex\n", this_thread::get_id());
+                                }
+                                else {
+                                    //printf("Текущий поток 2: %d, захватили mutex\n", this_thread::get_id());
+                                    if (path_exist(all_path, path1) == 1) {
+                                        all_path.push_back(path1);
+                                        cout << "Доска 2:\n";
+                                        print_doska(v_, y1, x1, y1 - a.first, x1 - a.second);
+                                        printf("Размер path1: %d\nколичество комбинаций: %d\n", path1.size(), all_path.size());
+                                        //cout << "Путь 2:\n";
+                                        //print_path(path1);
+                                        path1.clear();
+                                        TOTAL_ERRORS = 0;
+                                        clear_doska(v_, nachY, nachX);
+                                        x1 = nachX; y1 = nachY;
+                                    }
+                                }
+                                mtx.unlock();
+                                //printf("Текущий поток 2: %d, разблокировал mutex\n", this_thread::get_id());
+                            }
+                        }
+                        else {
+                            cant_go1++;
+                            if (cant_go1 > 9) {
+                                //cout << "Путь 2:\n";
+                                //print_path(path1);
+                                path1.clear();
+                                //printf("Очистили path1\n");
+                                clear_doska(v_, nachY, nachX);
+                                x1 = nachX; y1 = nachY;
+                                cant_go1 = 0;
+                                TOTAL_ERRORS++;
+                                //continue;
+                            }
+                        }
+                    }
+                    //cout << "}Поток 2\n";
+                });
+                p1.join();
+                p2.join();
+
             }
             return;
         }
@@ -192,5 +290,5 @@ int main() {
 
     doska_resh(DOSKA, nachY, nachX, konY, konX);
 
-    printf("\nКоличество путей: %d", all_path.size());
+    printf("\nКоличество путей: %zd", all_path.size());
 }
