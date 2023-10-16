@@ -146,7 +146,7 @@ void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &
     print_doska(v_);
     for (int y = nachY, y1 = nachY; y <= in_vec_size, y1 <= in_vec_size;) {
         for (int x = nachX, x1 = nachX; x <= in_vec_size, x1 <= in_vec_size;) {
-            while (TOTAL_ERRORS <= 900000) {
+            while (TOTAL_ERRORS <= 200000) {
                 thread p1([&]() {
                     //cout << "Поток 1{\n";
                     for (const auto& a : rand_vec()) {
@@ -277,11 +277,11 @@ int main() {
     setlocale(0, "");
     printf("Введите две пары чисел: {начY,начX} {конY,конX}: \n");
     int nachY, nachX, konY, konX;
-    nachY = 4; nachX = 4; konY = 0; konX = 0;
+    nachY = 3; nachX = 3; konY = 0; konX = 0;
     //cin >> nachY >> nachX >> konY >> konX; //не удалять
 
     
-    vector<vector<int>> DOSKA(5, { 0,0,0,0,0 });
+    vector<vector<int>> DOSKA(4, { 0,0,0,0 });
     DOSKA[nachY][nachX] = 1;
     DOSKA[konY][konX] = 2;
 
