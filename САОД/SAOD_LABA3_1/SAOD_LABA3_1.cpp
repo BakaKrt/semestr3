@@ -146,7 +146,7 @@ void doska_resh(vector<vector<int>> &v, int &nachY, int &nachX, int &konY, int &
     print_doska(v_);
     for (int y = nachY, y1 = nachY; y <= in_vec_size, y1 <= in_vec_size;) {
         for (int x = nachX, x1 = nachX; x <= in_vec_size, x1 <= in_vec_size;) {
-            while (TOTAL_ERRORS <= 200000) {
+            while (TOTAL_ERRORS <= 100000) {
                 thread p1([&]() {
                     //cout << "Поток 1{\n";
                     for (const auto& a : rand_vec()) {
