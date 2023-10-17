@@ -25,46 +25,23 @@ void print_vector(vector<vector<int>>& vec) {
 }
 
 void func(vector<vector<int>>& vec) {
-    vector<int> s = vec[0]; int buff = s[s.size()-1];
-    for (int x = 0; x < vec.size(); x++) {
-        if (x == 0) {
-            for (int y = vec[x].size() - 1; y > 0; y--) {
-                vec[x][y] = vec[x][y - 1];
-            }
-        }
+    vector<int> s = vec[0]; short vs = vec.size(), vss = vec[0].size();
+    vector<int> buf(2);
+    buf[0] = vec[0][vec.size() - 2];
+    buf[1] = vec[vec.size() - 1][0];
+
+    for (int i = 0, ri = vs - 2 - i; i < vs - 1, ri > 0; i++, ri--) {
+        vec[0][ri] = vec[0][ri - 1];
+        vec[vs - 1][i] = vec[vs - 1][i + 1];
     }
-    s = vec[vec.size() - 1];
-    int buff_ = s[s.size() - 1];
-    for (int x = vec.size()-1; x > 1; x--) {
-        vec[x][vec[x].size() - 1] = vec[x-1][vec[x].size() - 1];
+    for (int j = 0, rj = vss - j; j < vss, rj > 0; j++, rj--) {
+        vec[rj][vss - 1] = vec[rj - 1][vss - 1];
+        vec[j][0] = vec[j + 1][0];
     }
-    vec[vec[vec.size()-1].size() - vec.size() + 2][vec[vec.size()-1].size() - 1] = buff;
-    
-    buff = buff_;
-
-    print_vector(vec);
-    printf("Это buff: %d\n", buff);
-    vec[vec[vec.size() - 1].size()-2][vec[vec.size() - 1].size()-1] = buff;
-
-    s = vec[vec.size() - 1];
-    buff = s[0];
-
-
-    for (int x = vec.size()-1; x > 0; x--) {
-        for (int y = 1; y < vec[x].size()-1; y++) {
-            vec[x][y-1] = vec[x][y];
-        }
-        break;
-    }
-    vec[vec[vec.size() - 1].size()][vec[vec.size() - 1].size()-2] = buff;
-
-
-    for (int x = 0; x < vec.size()-1; x++) {
-        vec[x][0] = vec[x+1][0];
+    vec[1][vss - 1] = buf[0];
+    vec[vs - 2][0] = buf[1];
     }
 
-    vec[vec[vec.size() - 1].size()-1][0] = buff;
-    }
 
 
 int main()
