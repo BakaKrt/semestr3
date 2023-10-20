@@ -147,44 +147,44 @@ public:
     }
 
     void menu() {
-        printf("Доступные команды:\nadd_lenta\nadd_com\nload_com\nsave_com\nprint_com\nstart\nleave\tНапишите stop в команде, чтобы выйти в меню\n >");
+        printf("Доступные команды:\n1) add_lenta\n2) add_com\n3) load_com\n4) save_com\n5) print_com\n6) start\n7) leave\tНапишите stop в команде, чтобы выйти в меню\n >");
         string in;
         cin >> in;
         while (in != "leave") {
-            if (in == "add_lenta") {
+            if (in == "add_lenta" || in == "1") {
                 printf("Синтаксис команды: [СИМВОЛ][НАПРАВЛЕНИЕ]. Пример: a-1\n");
                 this->translate_to_command();
                 cout << " >"; cin >> in;
             }
             else if (in == "stop") {
                 printf("Доступные команды:\nadd_lenta\nadd_comms\nload_comms\nsave_comms\nprint_com\nstart\nleave\tНапишите stop в команде, чтобы выйти в меню\n >");
-                cout << " >"; cin >> in;
+                cin >> in;
             }
-            else if (in == "add_com") {
+            else if (in == "add_com" || in == "2") {
                 printf("Синтаксис команды: [Текущее состояние][Символ a][Следующее состояние][Символ b][Направление движения{-1,0,1}]\nПример: q1cq2a-1\n");
                 this->add_commads();
                 cout << " >"; cin >> in;
             }
-            else if (in == "load_com") {
+            else if (in == "load_com" || in == "3") {
                 this->load_from_fs();
                 cout << " >"; cin >> in;
             }
-            else if (in == "save_com") {
+            else if (in == "save_com" || in == "4") {
                 save_comms_to_fs();
                 cout << " >"; cin >> in;
             }
-            else if (in == "print_com") {
+            else if (in == "print_com" || in == "5") {
                 this->print_com();
                 cout << " >"; cin >> in;
             }
-            else if (in == "start") {
+            else if (in == "start" || in == "6") {
                 end = true;
                 this->process_coms();
                 cout << " >"; cin >> in;
             }
             else {
                 cout << "Неправильная команда, введи заново: ";
-                cin >> in;
+                cout << " >"; cin >> in;
             }
         }
     }
