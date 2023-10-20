@@ -2,15 +2,16 @@
 #include <vector>
 #include <string>
 #include <iomanip>
+#include <fstream>
 
 using namespace std;
 
 struct instruction {
     string MOVE_SYMBOL;
     int MOVE_TO;
-} INSTR;
+};
 
-struct commands {
+struct commands { //структура, хранящее команды для инструкций
     string CUR_STATE;
     string CUR_SYMBOL;
     string TO_STATE;
@@ -26,20 +27,29 @@ public:
             v[i] = "#";
         }
         CUR_SYMB = v[CUR_POS];
-        COMMS.push_back({ "q1","a","q1","a","1" });
-        COMMS.push_back({ "q1","#","q2","#","-1" });
-        COMMS.push_back({ "q2","a","q2","b","-1" });
-        COMMS.push_back({ "q2","b","q2","b","-1" });
-        COMMS.push_back({ "q2","#","q0","#","1" });
-        COMMS.push_back({ "q1","s","q0","s","0" });
+        //COMMS.push_back({ "q1","a","q1","a","1" });
+        //COMMS.push_back({ "q1","#","q2","#","-1" });
+        //COMMS.push_back({ "q2","a","q2","b","-1" });
+        //COMMS.push_back({ "q2","b","q2","b","-1" });
+        //COMMS.push_back({ "q2","#","q0","#","1" });
+        //COMMS.push_back({ "q1","s","q0","s","0" });
         //COMMS.push_back({ "q2","b","q0","c","0" });
-        //COMMS.push_back({ "q2","b","q0","c","0" });
-    }
-    void print_cur_symbol() {
-        cout << CUR_SYMB;
+        //COMMS.push_back({ "q2","b","q0","c","0" }); //расскоментить если хочется добавить инструкции по умолчанию
     }
 
-    void process_coms() {
+    void add_commads() { // функция добавления комманд в вектор комманд COMMS
+        string in = "";
+        while (in != "stop") {
+            cout << " >"; cin >> in;
+            if (in == "stop") {
+                this->menu(); //вызываем снова меню при вводе == "menu"
+            }
+            in += " ";
+            COMMS.push_back({ in.substr(0,2), in.substr(2,1), in.substr(3,2), in.substr(5,1), in.substr(6,2) });
+        }
+    }
+
+    void process_coms() { // проводит вычисление заданной ленты при заданных инструкциях и состояниях
         while (CUR_SOST != "qo") {
             for (auto& c : COMMS) {
                 if (CUR_SOST == c.CUR_STATE && v[CUR_POS] == c.CUR_SYMBOL) {
@@ -54,14 +64,10 @@ public:
         }
     }
 
-    void get_cur_inf() {
-        printf("\nCUR_POS:%d\tv[CUR_POS]:%s\n", CUR_POS, v[CUR_POS].c_str());
-    }
-
-    void put_to_sight(instruction inst) {
+    void put_to_sight(instruction inst) { // помещаем на ленту символы в соответствии с [символ][направление]
         if (CUR_POS + inst.MOVE_TO != 0 || CUR_POS + inst.MOVE_TO != v.size()) {
             v[CUR_POS] = inst.MOVE_SYMBOL;
-            printf("\nCUR_POS:%d\tv[CUR_POS]:%s\nCUR_SOST:%s\t{%s,%d}\n", CUR_POS+inst.MOVE_TO, v[CUR_POS].c_str(),CUR_SOST.c_str(), inst.MOVE_SYMBOL.c_str(), inst.MOVE_TO);
+            //printf("\nCUR_POS:%d\tv[CUR_POS]:%s\nCUR_SOST:%s\t{%s,%d}\n", CUR_POS+inst.MOVE_TO, v[CUR_POS].c_str(),CUR_SOST.c_str(), inst.MOVE_SYMBOL.c_str(), inst.MOVE_TO);
             CUR_POS += inst.MOVE_TO;
             print_lent(CUR_POS);
         }
@@ -70,10 +76,8 @@ public:
         }
     }
     void print_lent(int C_POS=-1) {
-        
         for (int i = 0; i < v.size(); i++) {
             if (i == C_POS) {
-                //printf("%3d\x1b[40m", i);
                 cout << setw(7) << "\x1b[42m" << i << "\x1b[40m" << setw(4);
             }
             else
@@ -83,10 +87,11 @@ public:
 
         for (const auto& a : v) {
             cout << a << " " << setw(3);
-        } cout << setw(1) << endl;;
+        } cout << setw(1) << endl;
+        if (end) cout << endl;
     }
 
-    instruction get_com_from_input(string in) {
+    instruction get_com_from_input(string in) { //транслятор в вид [символ][направление]
         if (in.size() == 2) {
             return { string(1,in[0]), stoi(string(1,in[1])) };
         }
@@ -94,25 +99,93 @@ public:
             return { string(1,in[0]), stoi(string(1,in[1]) + string(1,in[2])) };
     }
 
-    void translate_to_command() {
+    void translate_to_command() { //получаем ввод от пользователя и добавляем в ленту символы
         string in;
-        bool is_print = false;
         while (in != "#") {
-            cin >> in;
-            if (in == "print") {
-                is_print = true;
-                cin >> in;
-            }
+            cout << " >"; cin >> in;
             if (in == "stop") {
-                break;
+                this->menu();
             }
 
-            //if (in!="print")
             this->put_to_sight(get_com_from_input(in));
-            //else
-            
-            //this->print_lent();
             cout << endl;
+        }
+    }
+
+    void save_comms_to_fs() { //сохраняем команды в файловую систему
+        ofstream file;
+        file.open("config.txt");
+        if (file.is_open()) {
+            cout << "Начал запись в файл инструкций!\n";
+            for (const auto& a : COMMS) {
+                file << a.CUR_STATE << a.CUR_SYMBOL << a.TO_STATE << a.TO_SYMBOL << a.TO_MOVE << endl;
+            }
+            cout << "Запись инструкций завершена.\n";
+        }
+        else {
+            cout << "\nНе удалось открыть файл!\n";
+        }
+        file.close();
+    }
+
+    void load_from_fs() { //загружаем команды из файловой системы
+        ifstream file; string in;
+        file.open("config.txt");
+        if (file.is_open()) {
+            cout << "Открыл файл для чтения инструкций\n";
+            while (getline(file, in)) {
+                COMMS.push_back({ in.substr(0,2), in.substr(2,1), in.substr(3,2), in.substr(5,1), in.substr(6,2) });
+            }
+            cout << "Считал и записал инструкции!\n";
+        }
+    }
+
+    void print_com() {
+        for (auto& a : COMMS) {
+            cout << a.CUR_STATE << a.CUR_SYMBOL << a.TO_STATE << a.TO_SYMBOL << a.TO_MOVE << endl;
+        }
+    }
+
+    void menu() {
+        printf("Доступные команды:\nadd_lenta\nadd_com\nload_com\nsave_com\nprint_com\nstart\nleave\tНапишите stop в команде, чтобы выйти в меню\n >");
+        string in;
+        cin >> in;
+        while (in != "leave") {
+            if (in == "add_lenta") {
+                printf("Синтаксис команды: [СИМВОЛ][НАПРАВЛЕНИЕ]. Пример: a-1\n");
+                this->translate_to_command();
+                cout << " >"; cin >> in;
+            }
+            else if (in == "stop") {
+                printf("Доступные команды:\nadd_lenta\nadd_comms\nload_comms\nsave_comms\nprint_com\nstart\nleave\tНапишите stop в команде, чтобы выйти в меню\n >");
+                cout << " >"; cin >> in;
+            }
+            else if (in == "add_com") {
+                printf("Синтаксис команды: [Текущее состояние][Символ a][Следующее состояние][Символ b][Направление движения{-1,0,1}]\nПример: q1cq2a-1\n");
+                this->add_commads();
+                cout << " >"; cin >> in;
+            }
+            else if (in == "load_com") {
+                this->load_from_fs();
+                cout << " >"; cin >> in;
+            }
+            else if (in == "save_com") {
+                save_comms_to_fs();
+                cout << " >"; cin >> in;
+            }
+            else if (in == "print_com") {
+                this->print_com();
+                cout << " >"; cin >> in;
+            }
+            else if (in == "start") {
+                end = true;
+                this->process_coms();
+                cout << " >"; cin >> in;
+            }
+            else {
+                cout << "Неправильная команда, введи заново: ";
+                cin >> in;
+            }
         }
     }
 
@@ -122,15 +195,13 @@ private:
     string CUR_SOST = "q1";
     int CUR_POS = 10;
     string CUR_SYMB;
+    bool end = false;
 };
 
 int main() {
     setlocale(0, "");
-
     lenta l;
-    l.get_cur_inf();
-    l.translate_to_command();
-    l.process_coms();
-    l.print_lent();
+
+    l.menu();
     return 0;
 }
