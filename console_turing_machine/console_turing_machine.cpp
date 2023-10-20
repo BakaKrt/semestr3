@@ -104,7 +104,7 @@ public:
         while (in != "#") {
             cout << " >"; cin >> in;
             if (in == "stop") {
-                this->menu();
+                return;
             }
 
             this->put_to_sight(get_com_from_input(in));
@@ -157,7 +157,7 @@ public:
                 cout << " >"; cin >> in;
             }
             else if (in == "stop") {
-                printf("Доступные команды:\nadd_lenta\nadd_comms\nload_comms\nsave_comms\nprint_com\nstart\nleave\tНапишите stop в команде, чтобы выйти в меню\n >");
+                printf("Доступные команды:\n1) add_lenta\n2) add_com\n3) load_com\n4) save_com\n5) print_com\n6) start\n7) leave\tНапишите stop в команде, чтобы выйти в меню\n >");
                 cin >> in;
             }
             else if (in == "add_com" || in == "2") {
@@ -181,6 +181,10 @@ public:
                 end = true;
                 this->process_coms();
                 cout << " >"; cin >> in;
+            }
+            else if (in == "leave" || in == "7") {
+                in = "leave";
+                return;
             }
             else {
                 cout << "Неправильная команда, введи заново: ";
