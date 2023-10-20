@@ -16,8 +16,8 @@ int main()
     }
 
     for (const auto& x : mas) {
-        printf(" %.1f\n",x);
-    }
+        printf(" %.1f ", x);
+    } cout << endl;
     
     double A, B; int kol = 0;
     cout << "Введите диапазон от А до В: ";
@@ -48,7 +48,7 @@ int main()
         }
     }
 
-    //for (const auto& x : mas) {
-    //    cout << x << endl;
-    //}
+    for (const auto& x : mas) {
+        printf(" %.1f ", x);
+    } cout << endl;
 }
