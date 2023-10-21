@@ -37,36 +37,72 @@ public:
         //COMMS.push_back({ "q2","b","q0","c","0" }); //расскоментить если хочется добавить инструкции по умолчанию
     }
 
+    bool is_valid(string in) {
+        in += " ";
+        if (in.size() >= 8) {
+            return true;
+        }
+        return false;
+    }
+
     void add_commads() { // функция добавления комманд в вектор комманд COMMS
         string in = "";
         while (in != "stop") {
             cout << " >"; cin >> in;
             if (in == "stop") {
-                this->menu(); //вызываем снова меню при вводе == "menu"
+                return; 
+            }
+            else if (!is_valid(in)) {
+                printf("Некорректный ввод! Выход из команды\n");
+                return;
             }
             in += " ";
             COMMS.push_back({ in.substr(0,2), in.substr(2,1), in.substr(3,2), in.substr(5,1), in.substr(6,2) });
         }
     }
 
+    void get_cur_sost() {
+        printf("Текущее состояние ленты: %s\n", CUR_SOST.c_str());
+    }
+
     void process_coms() { // проводит вычисление заданной ленты при заданных инструкциях и состояниях
+        int steps = 0, perebor = 0;
         while (CUR_SOST != "qo") {
             for (auto& c : COMMS) {
+                perebor++;
                 if (CUR_SOST == c.CUR_STATE && v[CUR_POS] == c.CUR_SYMBOL) {
+                    steps++;
+                    perebor = 0;
                     this->put_to_sight({ c.TO_SYMBOL, stoi(c.TO_MOVE) });
                     CUR_SOST = c.TO_STATE;
                     if (CUR_SOST == "q0") {
                         cout << "\nКонечное состояние!\n";
+                        CUR_SOST = "q1";
+                        after_start = true;
                         return;
                     }
                 }
+            }
+            if (perebor >= 100) {
+                cout << "Ошибка в инструкциях! Нет конечной позиции при данных инструкциях, машина никогда не остановится считать!\n";
+                return;
+            }
+            if (steps == 0 ) {
+                print_lent(CUR_POS);
+                cout << "Ошибка в вычислениях, нет ни одной верной инструкции для данной ленты!\n";
+                return;
             }
         }
     }
 
     void put_to_sight(instruction inst) { // помещаем на ленту символы в соответствии с [символ][направление]
-        if (CUR_POS + inst.MOVE_TO != 0 || CUR_POS + inst.MOVE_TO != v.size()) {
+        if (CUR_POS + inst.MOVE_TO == (v.size() - 1)) {
+            v.resize(v.size() + 1);
+            v[v.size() - 1] = "#";
+        }
+        if (CUR_POS + inst.MOVE_TO != -1 || CUR_POS + inst.MOVE_TO != (v.size() - 1)) {
             v[CUR_POS] = inst.MOVE_SYMBOL;
+            printf("Текущее состояние: %s\n", CUR_SOST.c_str());
             //printf("\nCUR_POS:%d\tv[CUR_POS]:%s\nCUR_SOST:%s\t{%s,%d}\n", CUR_POS+inst.MOVE_TO, v[CUR_POS].c_str(),CUR_SOST.c_str(), inst.MOVE_SYMBOL.c_str(), inst.MOVE_TO);
             CUR_POS += inst.MOVE_TO;
             print_lent(CUR_POS);
@@ -102,13 +138,21 @@ public:
     void translate_to_command() { //получаем ввод от пользователя и добавляем в ленту символы
         string in;
         while (in != "#") {
-            cout << " >"; cin >> in;
-            if (in == "stop") {
-                return;
+            if (pos_transitions == 0 || after_start) {
+                this->print_lent(CUR_POS);
+                after_start = false;
             }
 
-            this->put_to_sight(get_com_from_input(in));
-            cout << endl;
+            cout << " >"; cin >> in;
+            if (in == "stop" || in.size() > 3) {
+                if (in == "stop" || in.size() > 3) {
+                    return;
+                }
+
+                this->put_to_sight(get_com_from_input(in));
+                pos_transitions++;
+                cout << endl;
+            }
         }
     }
 
@@ -186,6 +230,10 @@ public:
                 in = "leave";
                 return;
             }
+            else if (in == "cur_sost") {
+                this->get_cur_sost();
+                cout << " >"; cin >> in;
+            }
             else {
                 cout << "Неправильная команда, введи заново: ";
                 cout << " >"; cin >> in;
@@ -198,9 +246,11 @@ private:
     vector<commands> COMMS;
     string CUR_SOST = "q1";
     int CUR_POS = 10;
+    int pos_transitions = 0;
     string CUR_SYMB;
-    bool end = false;
+    bool end = false; bool after_start = false;
 };
+
 
 int main() {
     setlocale(0, "");
