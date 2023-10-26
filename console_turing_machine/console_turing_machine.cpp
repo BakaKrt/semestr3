@@ -145,14 +145,13 @@ public:
 
             cout << " >"; cin >> in;
             if (in == "stop" || in.size() > 3) {
-                if (in == "stop" || in.size() > 3) {
-                    return;
-                }
-
-                this->put_to_sight(get_com_from_input(in));
-                pos_transitions++;
-                cout << endl;
+                return;
             }
+
+            this->put_to_sight(get_com_from_input(in));
+            pos_transitions++;
+            cout << endl;
+            
         }
     }
 
