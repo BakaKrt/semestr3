@@ -7,174 +7,157 @@ click_first = False
 def main(page: ft.Page):
 
     machine = Machine()
-
-    instructions = []
-
-    def start(e):
-        for i in range(0, len(instructions)):
-            state1 = instructions[i].controls[0].value
-            state2 = instructions[i].controls[3].value
-            letter1 = instructions[i].controls[1].value
-            letter2 = instructions[i].controls[2].value
-            direction = instructions[i].controls[4].value
-            machine.add_instruction(state1, letter1, letter2, direction, state2)
-
-        lent = machine.start_machine()
-        right_container.content.controls.append(
-            ft.Text(
-                value=f"{lent}",
-                color=ft.colors.BLACK
-            )
-        )
-
-        page.update()
-
-
-    def click_word_button(e):
-        global click_first
-        if not click_first:
-            machine.set_word(word.value)
-            right_container.content.controls.append(
-                ft.Text(
-                    value=machine.lent,
-                    color=ft.colors.BLACK
-                )
-            )
-            right_container.content.controls.append(
-                ft.ElevatedButton(text="Результаты", on_click=start)
-            )
-            click_first = True
-        else:
-            instructions.append(left_container.content.controls[-2])
-
-        if len(instructions) != 0:
-            state1 = instructions[-1].controls[0].value
-            state2 = instructions[-1].controls[3].value
-            letter1 = instructions[-1].controls[1].value
-            letter2 = instructions[-1].controls[2].value
-            direction = instructions[-1].controls[4].value
-            right_container.content.controls.append(
-                ft.Text(
-                    value=f"{state1}->{state2}  {letter1}->{letter2}  {direction}",
-                    color=ft.colors.BLACK
-                )
-            )
-
-        icon_button = left_container.content.controls.pop()
-        
-        left_container.content.controls.append(
-            ft.Row(
-                controls=[
-                    ft.TextField(
-                        hint_text="Состояние",
-                        color=ft.colors.WHITE,
-                        width=110,
-                        text_size=15
-                    ),
-                    ft.TextField(
-                        hint_text="Буква",
-                        color=ft.colors.WHITE,
-                        width=110,
-                        text_size=15
-                    ),
-                    ft.TextField(
-                        hint_text="Замена буквы",
-                        color=ft.colors.WHITE,
-                        width=125,
-                        text_size=15
-                    ),
-                    ft.TextField(
-                        hint_text="Замена состояния",
-                        color=ft.colors.WHITE,
-                        width=125,
-                        text_size=15
-                    ),
-                    ft.TextField(
-                        hint_text="Направление",
-                        color=ft.colors.WHITE,
-                        width=125,
-                        text_size=15
-                    )
-                ]            
-            )
-        )
-        left_container.content.controls.append(
-            ft.Row(
-                controls=[
-                    icon_button
-                ]
-            )
-        )
-        page.update()
-
-    word = ft.TextField(
-        hint_text="Введите слово...",
-        color=ft.colors.WHITE,
-        width=550
-    )
-
-    left_column = ft.Column(
-            controls=[
-                ft.Text(
-                    value="Настройка машины",
-                    font_family="Lato",
-                    color=ft.colors.WHITE,
-                    style=ft.TextThemeStyle.TITLE_LARGE
-                ),
-                word,
-                ft.IconButton(
-                    icon=ft.icons.ADD,
-                    icon_color=ft.colors.BLACK,
-                    bgcolor=ft.colors.WHITE,
-                    on_click=click_word_button
-                )
-            ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
-    )
-    left_container = ft.Container(
-        content=left_column,
-        bgcolor=ft.colors.GREY_900,
-        width=700,
-        height=700
-    )
-
-    right_column = ft.Column(
-        controls=[
-            ft.Text(
-                value="Показ машины",
-                style=ft.TextThemeStyle.TITLE_LARGE,
-                font_family="Lato"
-            )
-        ],
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
-    )
-
-    right_container = ft.Container(
-        content=right_column,
-        bgcolor="#8ecbfb",
-        width=800,
-        height=800,
-        padding=10,
-        #margin=10,
-        border_radius=10
+    
+    right_column_lenta = ft.Text(
+        value="Тут будет какое-то значение после запуска машины",
+        size=20,
+        bgcolor=ft.colors.TRANSPARENT,
+        text_align=ft.TextAlign.CENTER,
     )
     
-    left_row_lr = ft.Column(controls=[
-        ft.Container(
-            content=ft.Text(
-                value="Подсказки:",
-                text_align=ft.alignment.top_right
+    right_column_lenta_field = ft.Container(
+        content=right_column_lenta,
+        width=600,
+        height=250,
+        border_radius=10,
+        padding=10,
+        bgcolor="#0f68ad"
+    )
+
+    def start_():
+        machine.set_word(lenta_from_user.value)
+        machine.set_instructions(left_row_instructions_field.value)
+        cur_state = machine.start_machine()
+        right_column_lenta.value = cur_state
+        page.update()
+    
+    button_start = ft.Container(content=
+        ft.Container(content=
+            ft.Container(content=
+                    ft.Text("СТАРТ", size=40),
+                    bgcolor="#0f68ad",
+                    on_click = lambda e: start_(),
+                    border_radius=7,
+                    width=140,
+                    height=70,
+                    alignment=ft.alignment.center
+                ),
+            alignment=ft.alignment.bottom_center
+        ),
+        width=800,
+        height=93,
+        border_radius=10,
+        bgcolor=ft.colors.TRANSPARENT,
+        alignment=ft.alignment.bottom_center,
+        margin=0
+    )
+
+    right_container = ft.Container(content=
+        ft.Column(controls=[
+            ft.Container(content=
+                ft.Column(controls=[
+                    right_column_lenta_field
+                ]),
+                width=800,
+                height=650,
+                margin=0
             ),
+            ft.Container(content=
+                ft.Column(controls=[
+                    button_start
+                ])
+            )
+        ]
+    ),
+    width=800,
+    height=800,
+    bgcolor="#8ecbfb",
+    padding=10,
+    border_radius=10)
+    
+    def primer1():
+        left_row_instructions_field.value = "q1aq1bR\nq1bq1aR\nq1λq2λL\nq2aq0cE"
+        lenta_from_user.value = "aaaaaabbbbb"
+        page.update()
+        
+    
+    left_row_lr = ft.Column(controls=[
+        ft.Container(content=
+            ft.Column(controls=[
+                ft.Container(content=
+                    ft.Text(
+                        value="Подсказки:",
+                        text_align=ft.alignment.top_right
+                    ),
+                    alignment=ft.alignment.center
+                ),
+                ft.Text(
+                    value="Пример правильного набора инструкций:\nq1aq2bR\nq2aq3cL\nq3cq0aE"
+                )
+            ]),
             bgcolor="#b54b64",
             width=350,
             height=250,
             padding=10,
             border_radius=11
         ),
-        ft.Container(
-            content=ft.Text(
-                value="А сюда можно ебануть заготовки инструкций и лент",
-                text_align=ft.alignment.top_center
+        ft.Container(content=
+            ft.Column(controls=[
+                ft.Container(content=
+                    ft.Text(
+                        value="Заготовки инструкций и лент",
+                    ),
+                    alignment=ft.alignment.center,
+                    height=30
+                ),
+                ft.Container(content=
+                    ft.Column(controls=[
+                        ft.Row(controls=[
+                            ft.Container(width=20,bgcolor=ft.colors.TRANSPARENT),
+                            ft.Container(content=ft.Container(content=
+                                ft.Text("Пример 1",size=25,text_align=ft.TextAlign.CENTER,color="#0f68ad"),
+                                alignment=ft.alignment.center
+                            ),
+                            width=130,
+                            height=83,
+                            bgcolor=ft.colors.WHITE,
+                            border_radius=10,
+                            on_click=lambda e: (primer1())
+                        ),
+                        ft.Container(content=ft.Container(content=
+                                ft.Text("Пример 2",size=25,text_align=ft.TextAlign.CENTER,color="#0f68ad"),
+                                alignment=ft.alignment.center
+                            ),
+                            width=130,
+                            height=83,
+                            bgcolor=ft.colors.WHITE,
+                            border_radius=10
+                        )]
+                        ),
+                        ft.Row(controls=[
+                            ft.Container(width=20,bgcolor=ft.colors.TRANSPARENT),
+                            ft.Container(content=ft.Container(content=
+                                    ft.Text("Пример 3",size=25,text_align=ft.TextAlign.CENTER,color="#0f68ad"),
+                                    alignment=ft.alignment.center
+                                ),
+                            width=130,
+                            height=83,
+                            bgcolor=ft.colors.WHITE,
+                            border_radius=10
+                            ),
+                            ft.Container(content=ft.Container(content=
+                                    ft.Text("Пример 4",size=25,text_align=ft.TextAlign.CENTER,color="#0f68ad"),
+                                    alignment=ft.alignment.center
+                                ),
+                            width=130,
+                            height=83,
+                            bgcolor=ft.colors.WHITE,
+                            border_radius=10,
+                            )
+                        ])
+                    ])
+                )
+            ]
             ),
             theme=ft.Theme(color_scheme_seed=ft.colors.INDIGO),
             theme_mode=ft.ThemeMode.DARK,
@@ -186,17 +169,30 @@ def main(page: ft.Page):
         )
     ])
     
+    #пытался создать filePicker, но он отваливается и не работает
+    def insert_instructions_from_file(e: ft.FilePickerResultEvent):
+        left_row_instructions_field.value = (
+            " ".join(map(lambda f: f.name, e.files)) if e.files else " "
+        )
+        left_row_instructions_field.update()
+    
+    ins_inst_from_f_dialog = ft.FilePicker(),
+    #page.overlay.append(ins_inst_from_f_dialog)
+    #page.update()
+    
     left_row_save_del_butts = ft.Container(
         content=ft.Row(controls=[
             ft.IconButton(
                 icon=ft.icons.SAVE,
                 icon_color="#0f68ad",
-                on_click= lambda e: print("Вы типо сохранили какую-то хуйню"),
+                tooltip="Сохранить текущие инструкции в файл",
+                #on_click= lambda _: ins_inst_from_f_dialog.pick_files(allow_multiple=False),
                 width=47
             ),
             ft.IconButton(
                 icon=ft.icons.UPLOAD_FILE_SHARP,
                 icon_color="#b54b64",
+                tooltip="Загрузить инструкции из файла",
                 on_click= lambda e: print("Вы типо что-то загрузили хз"),
                 width=30
             )
@@ -209,6 +205,11 @@ def main(page: ft.Page):
         bgcolor=ft.colors.WHITE,
     )
     
+    def clear_all_containers():
+        left_row_instructions_field.value = ""
+        lenta_from_user.value = ""
+        right_column_lenta.value = "Тут будет какое-то значение после запуска машины"
+        page.update()
     
     left_row_rr_down = ft.Container(
         content=ft.Column(controls=[
@@ -217,9 +218,9 @@ def main(page: ft.Page):
             ]),
             
             ft.ElevatedButton(content=
-                ft.Text("Загрузить",size=11),
+                ft.Text("Очистить",size=11,tooltip="Очищение всех контейнеров"),
             bgcolor="#0f68ad",
-            on_click= lambda e: machine.set_instructions(left_row_instructions_field.value),
+            on_click= lambda e: clear_all_containers(),
         ),
         ]),
         width=120,
@@ -229,7 +230,8 @@ def main(page: ft.Page):
     )
     
     left_row_instructions_field = ft.TextField(
-        label="Ебани сюда свои инструкции",
+        hint_text="Напиши сюда свои инструкции",
+        value="",
         multiline=True,
         min_lines=1,
         color=ft.colors.WHITE,
@@ -265,6 +267,9 @@ def main(page: ft.Page):
     
     lenta_from_user = ft.TextField(
         hint_text="Введите слово для ленты",
+        prefix_text="λ",
+        suffix_text="λ",
+        value="",
         bgcolor="#b54b64",
         border_color=ft.colors.TRANSPARENT,
         width=1000,
@@ -300,7 +305,7 @@ def main(page: ft.Page):
                 margin=0
             ),
             left_row_instrucitons_container,
-            right_container
+            right_container,
         ])
     )
     

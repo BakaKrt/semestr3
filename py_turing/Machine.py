@@ -1,35 +1,30 @@
 class Machine:
-    """
-    string - word that will be handled
-    lent - infinity void symbols in left and right direction with our word
-    limits - limit to infinity of void symbols
-    instructions - dictionary of instructions for handled word:
-        state - first key in dict - this is present state of handler
-        letter - second key in dict - this is present letter in handled word
-            replace_letter - the value in letter key for replacement
-            direction - the value in letter key for set direction of handler
-            replace_state - the value in letter key for replacement of handler's state
+    """Класс машины
     """
 
     def __init__(self, string="", instructions=None):
         if instructions is None:
             instructions = {}
         self.string = string
-        self.limits = 20
+        self.limits = 5
         self.lent = "λ" * self.limits + self.string + "λ" * self.limits
         self.instructions = instructions
 
     def set_word(self, word: str) -> None:
-        """
-        Set the value of word and lent for handler
+        """Установить слово в ленту машины
 
-        :param word: str
-        :return None
+        Args:
+            word (str): само слово
         """
         self.string = word
         self.lent = "λ" * self.limits + self.string + "λ" * self.limits
 
     def set_instructions(self, inst:str):
+        """set_instructions
+
+        Args:
+            inst (str): строка, которая автоматически разбивается на инструкцию или инструкции, если в строке есть перенос строки
+        """
         temp_inst = inst.split("\n")
         
         self.instructions = {}
@@ -51,40 +46,16 @@ class Machine:
             }
         print(self.instructions)
 
-    def add_instruction(self, state: str, letter: str, replace_letter: str, direction: str, replace_state: str):
-        """
-        Addition one instruction to handler dictionary of instructions
-
-        :param state:
-        :param letter:
-        :param replace_letter:
-        :param direction:
-        :param replace_state:
-        :return:
-        """
-        # Direction may be only R (Right), L (Left), E (Empty)
-        if direction not in ("R", "L", "E"):
-            return Exception("Direction of machine should be any R, L or E")
-
-        if state not in self.instructions:
-            self.instructions[state] = {}
-
-        self.instructions[state][letter] = {
-            "replace_letter": replace_letter,
-            "direction": direction,
-            "replace_state": replace_state
-        }
-
     def start_machine(self):
-        """
-        Start machine work and return the handler's result
+        """Старт машины
 
-        :return:
+        Returns:
+            string: возвращает строку после обработки всех инструкций. При ошибках [неправильные инструкции, бесконечная работа машины без результата] возвращает пустую строку
         """
         position = self.limits   # Because all left symbols before limits is void
         state = "q1"             # Start state
         iterations = 0
-
+        
 
         while iterations <= 100:
             try:
@@ -101,11 +72,10 @@ class Machine:
                     position -= 1
 
                 iterations += 1
-                if iterations >= 100:
-                    return Exception("Upper than 100 iterations")
-
+                
                 state = replace_state
-                if (state == '!') or (state == "q0"):     # State '!' and "q0" mean stop of handler's work
+                if (state == '!') or (state == "q0"):
+                    print(self.lent)    # State '!' and "q0" mean stop of handler's work
                     return self.lent
             except :
                 iterations+=1
