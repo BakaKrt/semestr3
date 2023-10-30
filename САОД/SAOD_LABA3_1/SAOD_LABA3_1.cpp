@@ -278,7 +278,6 @@ int main() {
     printf("Введите две пары чисел: {начY,начX} {конY,конX}: \n");
     int nachY, nachX, konY, konX;
     nachY = 3; nachX = 3; konY = 0; konX = 0;
-    //cin >> nachY >> nachX >> konY >> konX; //не удалять
 
     
     vector<vector<int>> DOSKA(4, { 0,0,0,0 });

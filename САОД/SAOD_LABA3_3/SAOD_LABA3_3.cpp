@@ -26,7 +26,7 @@ void print_vector(vector<vector<pair<int,int>>> &a) {
             else
                 cout << y.first << "\t";
         }
-        cout << endl;
+        cout << endl << endl;
     }
 }
 
