@@ -211,23 +211,9 @@ def main(page: ft.Page):
         right_column_lenta.value = "Тут будет какое-то значение после запуска машины"
         page.update()
     
-    left_row_rr_down = ft.Container(
-        content=ft.Column(controls=[
-            ft.Row(controls=[
-                left_row_save_del_butts
-            ]),
-            
-            ft.ElevatedButton(content=
-                ft.Text("Очистить",size=11,tooltip="Очищение всех контейнеров"),
-            bgcolor="#0f68ad",
-            on_click= lambda e: clear_all_containers(),
-        ),
-        ]),
-        width=120,
-        height=100,
-        alignment=ft.alignment.bottom_right,
-        border_radius=10
-    )
+    def put_lambda():
+        left_row_instructions_field.value = left_row_instructions_field.value + "λ"
+        page.update()
     
     left_row_instructions_field = ft.TextField(
         hint_text="Напиши сюда свои инструкции",
@@ -239,6 +225,32 @@ def main(page: ft.Page):
         width=300,
         bgcolor="#0f68ad",
         border_radius=10,
+    )
+    
+    left_row_rr_down = ft.Container(
+        content=ft.Column(controls=[
+            ft.Row(controls=[
+                left_row_save_del_butts
+            ]),
+            ft.ElevatedButton(content=
+                ft.Text("Очистить",size=11,tooltip="Очищение всех контейнеров"),
+            bgcolor="#0f68ad",
+            on_click= lambda e: clear_all_containers(),
+            ),
+            ft.Container(
+                content= ft.Text(value="λ"),
+                on_click= lambda e: put_lambda(),
+                width=50,
+                height=50,
+                bgcolor="#b54b64",
+                border_radius=10,
+                alignment=ft.alignment.center
+            )
+        ]),
+        width=200,
+        height=300,
+        alignment=ft.alignment.bottom_right,
+        border_radius=10
     )
     
     left_row_right_column = ft.Row(controls=[
@@ -296,17 +308,14 @@ def main(page: ft.Page):
         ft.Row(controls=[
             center_lenta_container
             ],
-            alignment=ft.MainAxisAlignment.CENTER),
+            alignment=ft.MainAxisAlignment.CENTER
+        ),
         ft.Row(controls=[
-            ft.Container(
-                width=135,
-                height=800,
-                bgcolor=ft.colors.TRANSPARENT,
-                margin=0
-            ),
             left_row_instrucitons_container,
             right_container,
-        ])
+            ],
+            alignment=ft.MainAxisAlignment.CENTER
+        )
     )
     
 
