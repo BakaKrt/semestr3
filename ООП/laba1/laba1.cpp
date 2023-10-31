@@ -21,7 +21,6 @@ int main()
 	setlocale(0, "");
 	error oshibka = ERR_READ;
 	int* pointer;
-	//cout << _ERR_READ + ERR_WRITE << endl << endl;
 	printf("Количество байт для int64_t: %d\nКоличество байт для указателя на int %d\n", sizeof(int64_t), sizeof(pointer));
 	int i;
 	char c;

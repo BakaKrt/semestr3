@@ -60,7 +60,6 @@ int vec_sum(vector<vector<int>> &a) {
 
 void print_doska(vector<vector<int>> &a, int pos_y = -10, int pos_x = -10, int prevY = -10, int prevX = -10) {
     int y = 0; string color = "\x1b[38;5;"; int k = 0; short a_size = a[0].size();
-    //cout << "Это size: " << a_size << endl;
     for (const auto& a_ : a) {
         int x = 0;
         for (const auto& b_ : a_) {
