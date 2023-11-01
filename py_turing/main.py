@@ -18,7 +18,7 @@ def main(page: ft.Page):
     right_column_lenta_field = ft.Container(
         content=right_column_lenta,
         width=600,
-        height=250,
+        height=50,
         border_radius=10,
         padding=10,
         bgcolor="#0f68ad"
@@ -52,15 +52,24 @@ def main(page: ft.Page):
         margin=0
     )
 
+    left_row_step_by_step = ft.Container(content=
+        ft.Text(value="", color= ft.colors.GREEN),
+        width=0,
+        height=0,
+        bgcolor=ft.colors.TRANSPARENT
+    )
+    
     right_container = ft.Container(content=
         ft.Column(controls=[
             ft.Container(content=
                 ft.Column(controls=[
-                    right_column_lenta_field
+                    right_column_lenta_field,
+                    left_row_step_by_step
                 ]),
                 width=800,
                 height=650,
-                margin=0
+                margin=0,
+                bgcolor=ft.colors.RED
             ),
             ft.Container(content=
                 ft.Column(controls=[
@@ -193,7 +202,7 @@ def main(page: ft.Page):
                 icon=ft.icons.UPLOAD_FILE_SHARP,
                 icon_color="#b54b64",
                 tooltip="Загрузить инструкции из файла",
-                on_click= lambda e: print("Вы типо что-то загрузили хз"),
+                #on_click= lambda e: print("Вы типо что-то загрузили хз"),
                 width=30
             )
         ],

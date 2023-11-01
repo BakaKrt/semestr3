@@ -79,4 +79,6 @@ class Machine:
                     return self.lent
             except :
                 iterations+=1
-            
+        else:
+            print(self.lent)
+            return self.lent
