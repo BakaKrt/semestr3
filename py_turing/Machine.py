@@ -56,7 +56,7 @@ class Machine:
         state = "q1"             # Start state
         iterations = 0
         
-
+        all_interations = []
         while iterations <= 100:
             try:
                 letter = self.lent[position]
@@ -74,11 +74,15 @@ class Machine:
                 iterations += 1
                 
                 state = replace_state
+                all_interations.append(self.lent+"\n")
                 if (state == '!') or (state == "q0"):
                     print(self.lent)    # State '!' and "q0" mean stop of handler's work
-                    return self.lent
+                    print(all_interations)
+                    if (iterations==1):
+                        return self.lent
+                    return all_interations
             except :
                 iterations+=1
-        else:
-            print(self.lent)
-            return self.lent
+        #else:
+            #print(self.lent)
+            #return all_interations

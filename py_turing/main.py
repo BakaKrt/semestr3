@@ -8,6 +8,18 @@ def main(page: ft.Page):
 
     machine = Machine()
     
+    #
+    
+    def GLOBAL_INFO_MACHINE():
+        machine.set_word(lenta_from_user.value)
+        machine.set_instructions(left_row_instructions_field.value)
+        a = machine.start_machine()
+        if a is None:
+            a = [" ", " "]
+        return a
+    
+    #
+    
     right_column_lenta = ft.Text(
         value="Тут будет какое-то значение после запуска машины",
         size=20,
@@ -25,10 +37,15 @@ def main(page: ft.Page):
     )
 
     def start_():
-        machine.set_word(lenta_from_user.value)
-        machine.set_instructions(left_row_instructions_field.value)
-        cur_state = machine.start_machine()
+        #machine.set_word(lenta_from_user.value)
+        #machine.set_instructions(left_row_instructions_field.value)
+        #try:
+        #    cur_state = machine.start_machine()[-1]
+        #except:
+        #    cur_state = ""
+        cur_state = GLOBAL_INFO_MACHINE()[-1]
         right_column_lenta.value = cur_state
+        step_field.value=""
         page.update()
     
     button_start = ft.Container(content=
@@ -36,7 +53,10 @@ def main(page: ft.Page):
             ft.Container(content=
                     ft.Text("СТАРТ", size=40),
                     bgcolor="#0f68ad",
-                    on_click = lambda e: start_(),
+                    on_click = lambda e: (
+                        start_(),
+                        step_by_step()
+                        ),
                     border_radius=7,
                     width=140,
                     height=70,
@@ -51,9 +71,22 @@ def main(page: ft.Page):
         alignment=ft.alignment.bottom_center,
         margin=0
     )
-
-    left_row_step_by_step = ft.Container(content=
-        ft.Text(value="", color= ft.colors.GREEN),
+    
+    step_field = ft.TextField(value="", color= ft.colors.GREEN, width=10, height=40, multiline=True, disabled=True)
+  
+    def step_by_step():
+        left_row_step_by_step.width = 600
+        left_row_step_by_step.height = 350
+        left_row_step_by_step.bgcolor = ft.colors.BLUE
+        step_field.width = 500
+        step_field.height = 300
+        step_field.bgcolor = ft.colors.WHITE
+        a = GLOBAL_INFO_MACHINE()
+        for i in a:
+            step_field.value+=i
+        page.update()
+  
+    left_row_step_by_step = ft.Container(content=step_field,
         width=0,
         height=0,
         bgcolor=ft.colors.TRANSPARENT
@@ -218,6 +251,9 @@ def main(page: ft.Page):
         left_row_instructions_field.value = ""
         lenta_from_user.value = ""
         right_column_lenta.value = "Тут будет какое-то значение после запуска машины"
+        left_row_step_by_step.width = 0
+        left_row_step_by_step.height = 0
+        step_field.value = ""
         page.update()
     
     def put_lambda():
