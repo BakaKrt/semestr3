@@ -73,13 +73,13 @@ class Machine:
 
                 iterations += 1
                 
-                state = replace_state
-                all_interations.append(self.lent+"\n")
+                state = replace_state #[номер итерации][состояние ленты]
+                all_interations.append([iterations,position,self.lent+"\n"])
                 if (state == '!') or (state == "q0"):
                     print(self.lent)    # State '!' and "q0" mean stop of handler's work
-                    print(all_interations)
+                    #print(all_interations)
                     if (iterations==1):
-                        return self.lent
+                        return all_interations
                     return all_interations
             except :
                 iterations+=1

@@ -15,7 +15,8 @@ def main(page: ft.Page):
         machine.set_instructions(left_row_instructions_field.value)
         a = machine.start_machine()
         if a is None:
-            a = [" ", " "]
+            a = [1, 3,"λλλλλλλλ"]
+        print(f"Это состояние машины: {a}")
         return a
     
     #
@@ -43,9 +44,10 @@ def main(page: ft.Page):
         #    cur_state = machine.start_machine()[-1]
         #except:
         #    cur_state = ""
-        cur_state = GLOBAL_INFO_MACHINE()[-1]
+        cur_state = GLOBAL_INFO_MACHINE()[-1][-1]
+        print(cur_state)
         right_column_lenta.value = cur_state
-        step_field.value=""
+        step_field.clean()
         page.update()
     
     button_start = ft.Container(content=
@@ -72,7 +74,17 @@ def main(page: ft.Page):
         margin=0
     )
     
-    step_field = ft.TextField(value="", color= ft.colors.GREEN, width=10, height=40, multiline=True, disabled=True)
+#    step_field = ft.TextField(
+ #       value="",
+  #      color= ft.colors.GREEN,
+   ##    height=40,
+     #   multiline=True,
+      #  disabled=True
+    #)
+    
+    step_field = ft.ListView(
+        expand = 1,
+    )
   
     def step_by_step():
         left_row_step_by_step.width = 600
@@ -82,8 +94,25 @@ def main(page: ft.Page):
         step_field.height = 300
         step_field.bgcolor = ft.colors.WHITE
         a = GLOBAL_INFO_MACHINE()
-        for i in a:
-            step_field.value+=i
+        for c in a:
+            step_field.controls.append(ft.Row(controls=[
+                ft.Text(
+                    value=c[-1][0:c[1]-1],
+                    size=20,
+                    height=30,
+                ),
+                ft.Text(
+                    value=c[-1][c[1]-1:c[1]],
+                    size=20,
+                    height=30,
+                    color=ft.colors.RED
+                ),
+                ft.Text(
+                    value=c[-1][c[1]:],
+                    size=20,
+                    height=30
+                ),
+            ],spacing=0))
         page.update()
   
     left_row_step_by_step = ft.Container(content=step_field,
