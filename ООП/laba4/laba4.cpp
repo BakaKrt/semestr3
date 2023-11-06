@@ -158,7 +158,7 @@ int main()
     print_mas(in);
     cout << "Введите количество циклов сдвига: ";
     int k = 1;
-    cin >> k;
+    //cin >> k;
     for (int i = 0; i < k; i++)
         zadanie_5(in);
     cout << endl;
