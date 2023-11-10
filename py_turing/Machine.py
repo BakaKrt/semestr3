@@ -50,7 +50,7 @@ class Machine:
         """Старт машины
 
         Returns:
-            string: возвращает строку после обработки всех инструкций. При ошибках [неправильные инструкции, бесконечная работа машины без результата] возвращает пустую строку
+            string: возвращает строку после обработки всех инструкций. При ошибках [неправильные инструкции, бесконечная работа машины без результата] возвращает результат
         """
         position = self.limits   # Because all left symbols before limits is void
         state = "q1"             # Start state
@@ -72,17 +72,28 @@ class Machine:
                     position -= 1
 
                 iterations += 1
-                
-                state = replace_state #[номер итерации][состояние ленты]
-                all_interations.append([iterations,position,self.lent+"\n"])
-                if (state == '!') or (state == "q0"):
+                temp_cur_st = state
+                state = replace_state
+                all_interations.append({
+                    "lenta": self.lent,
+                    "position": position,
+                    "from_state": temp_cur_st + " -> ",
+                    "to_state": state,
+                    "from_letter": letter + " -> ",
+                    "to_letter": replace_letter,
+                    "direction": direction
+                })
+                if (state == "q0"):
                     print(self.lent)    # State '!' and "q0" mean stop of handler's work
-                    #print(all_interations)
-                    if (iterations==1):
-                        return all_interations
                     return all_interations
             except :
-                iterations+=1
-        #else:
-            #print(self.lent)
-            #return all_interations
+                all_interations.append({
+                    "lenta": "Нет конечного набора команд!\n",
+                    "position": -1,
+                    "from_state": "",
+                    "to_state": "",
+                    "from_letter": "",
+                    "to_letter": "",
+                    "direction": ""
+                })
+                return all_interations

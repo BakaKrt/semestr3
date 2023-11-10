@@ -1,8 +1,10 @@
 import flet as ft
 from Machine import Machine
 
-click_first = False
-
+#click_first = False
+main_color_1 = "#1abc9c"
+main_color_2 = "#d35400"
+main_color_3 = "#34495e"
 
 def main(page: ft.Page):
 
@@ -14,9 +16,9 @@ def main(page: ft.Page):
         machine.set_word(lenta_from_user.value)
         machine.set_instructions(left_row_instructions_field.value)
         a = machine.start_machine()
-        if a is None:
-            a = [1, 3,"λλλλλλλλ"]
-        print(f"Это состояние машины: {a}")
+        #if a is None:
+            #a = [{"lenta": "λλλλλλλλ", "position": 1}, {"lenta": "λλλλλλλλ", "position": 2}]
+        #print(f"Это состояние машины: {a}")
         return a
     
     #
@@ -30,7 +32,7 @@ def main(page: ft.Page):
     
     right_column_lenta_field = ft.Container(
         content=right_column_lenta,
-        width=600,
+        width=800,
         height=50,
         border_radius=10,
         padding=10,
@@ -44,7 +46,7 @@ def main(page: ft.Page):
         #    cur_state = machine.start_machine()[-1]
         #except:
         #    cur_state = ""
-        cur_state = GLOBAL_INFO_MACHINE()[-1][-1]
+        cur_state = GLOBAL_INFO_MACHINE()[-1]["lenta"]
         print(cur_state)
         right_column_lenta.value = cur_state
         step_field.clean()
@@ -84,35 +86,48 @@ def main(page: ft.Page):
     
     step_field = ft.ListView(
         expand = 1,
+        padding= 10,
     )
   
     def step_by_step():
-        left_row_step_by_step.width = 600
-        left_row_step_by_step.height = 350
+        left_row_step_by_step.width = 800
+        left_row_step_by_step.height = 600
+        left_row_step_by_step.border_radius = 10
         left_row_step_by_step.bgcolor = ft.colors.BLUE
-        step_field.width = 500
-        step_field.height = 300
+        step_field.width = 800
+        step_field.height = 600
         step_field.bgcolor = ft.colors.WHITE
         a = GLOBAL_INFO_MACHINE()
-        for c in a:
+        for cur_step in a:
             step_field.controls.append(ft.Row(controls=[
                 ft.Text(
-                    value=c[-1][0:c[1]-1],
+                    value=cur_step["lenta"][:cur_step["position"]-1],
                     size=20,
                     height=30,
+                    text_align=ft.TextAlign.CENTER,
                 ),
                 ft.Text(
-                    value=c[-1][c[1]-1:c[1]],
+                    value = cur_step["lenta"][cur_step["position"]-1:cur_step["position"]],
+                    #value=c[-1][c[1]-1:c[1]],
                     size=20,
                     height=30,
-                    color=ft.colors.RED
+                    color=ft.colors.RED,
+                    text_align=ft.TextAlign.CENTER,
                 ),
                 ft.Text(
-                    value=c[-1][c[1]:],
+                    value = cur_step["lenta"][cur_step["position"]:],
+                    #value=c[-1][c[1]:],
                     size=20,
-                    height=30
+                    height=30,
+                    text_align=ft.TextAlign.CENTER,
                 ),
-            ],spacing=0))
+                ft.Text(
+                    value = f"   {cur_step['from_state']}{cur_step['to_state']} {cur_step['from_letter']}{cur_step['to_letter']}  {cur_step['direction']}",
+                    size=20,
+                    height=30,
+                    text_align=ft.TextAlign.CENTER,
+                ),
+            ],spacing=0, vertical_alignment=ft.CrossAxisAlignment.CENTER))
         page.update()
   
     left_row_step_by_step = ft.Container(content=step_field,
@@ -131,7 +146,7 @@ def main(page: ft.Page):
                 width=800,
                 height=650,
                 margin=0,
-                bgcolor=ft.colors.RED
+                border_radius=10
             ),
             ft.Container(content=
                 ft.Column(controls=[
@@ -356,7 +371,7 @@ def main(page: ft.Page):
         prefix_text="λ",
         suffix_text="λ",
         value="",
-        bgcolor="#b54b64",
+        bgcolor=ft.colors.TRANSPARENT,
         border_color=ft.colors.TRANSPARENT,
         width=1000,
         text_size=40,
@@ -371,7 +386,7 @@ def main(page: ft.Page):
     
     center_lenta_container = ft.Container(
         content = center_column_down,
-        bgcolor="#b54b64",
+        bgcolor=main_color_1,
         width=1000,
         height=120,
         alignment=ft.alignment.center,
