@@ -33,10 +33,10 @@ def main(page: ft.Page):
     right_column_lenta_field = ft.Container(
         content=right_column_lenta,
         width=800,
-        height=50,
+        height=55,
         border_radius=10,
         padding=10,
-        bgcolor="#0f68ad"
+        bgcolor=main_color_2
     )
 
     def start_():
@@ -56,7 +56,7 @@ def main(page: ft.Page):
         ft.Container(content=
             ft.Container(content=
                     ft.Text("СТАРТ", size=40),
-                    bgcolor="#0f68ad",
+                    bgcolor=main_color_2,
                     on_click = lambda e: (
                         start_(),
                         step_by_step()
@@ -93,7 +93,7 @@ def main(page: ft.Page):
         left_row_step_by_step.width = 800
         left_row_step_by_step.height = 600
         left_row_step_by_step.border_radius = 10
-        left_row_step_by_step.bgcolor = ft.colors.BLUE
+        left_row_step_by_step.bgcolor = ft.colors.TRANSPARENT
         step_field.width = 800
         step_field.height = 600
         step_field.bgcolor = ft.colors.WHITE
@@ -102,28 +102,28 @@ def main(page: ft.Page):
             step_field.controls.append(ft.Row(controls=[
                 ft.Text(
                     value=cur_step["lenta"][:cur_step["position"]-1],
-                    size=20,
+                    size=25,
                     height=30,
                     text_align=ft.TextAlign.CENTER,
                 ),
                 ft.Text(
                     value = cur_step["lenta"][cur_step["position"]-1:cur_step["position"]],
-                    #value=c[-1][c[1]-1:c[1]],
-                    size=20,
+                    size=25,
                     height=30,
-                    color=ft.colors.RED,
+                    weight=ft.FontWeight.BOLD,
+                    color=main_color_2,
                     text_align=ft.TextAlign.CENTER,
                 ),
                 ft.Text(
                     value = cur_step["lenta"][cur_step["position"]:],
                     #value=c[-1][c[1]:],
-                    size=20,
+                    size=25,
                     height=30,
                     text_align=ft.TextAlign.CENTER,
                 ),
                 ft.Text(
                     value = f"   {cur_step['from_state']}{cur_step['to_state']} {cur_step['from_letter']}{cur_step['to_letter']}  {cur_step['direction']}",
-                    size=20,
+                    size=25,
                     height=30,
                     text_align=ft.TextAlign.CENTER,
                 ),
@@ -157,7 +157,7 @@ def main(page: ft.Page):
     ),
     width=800,
     height=800,
-    bgcolor="#8ecbfb",
+    bgcolor=main_color_3,
     padding=10,
     border_radius=10)
     
@@ -181,12 +181,14 @@ def main(page: ft.Page):
                     value="Пример правильного набора инструкций:\nq1aq2bR\nq2aq3cL\nq3cq0aE"
                 )
             ]),
-            bgcolor="#b54b64",
+            bgcolor=ft.colors.TRANSPARENT,
             width=350,
             height=250,
             padding=10,
-            border_radius=11
+            border_radius=11,
+            border= ft.border.all(3, main_color_2)
         ),
+        ft.Container(height=20, bgcolor=ft.colors.TRANSPARENT),
         ft.Container(content=
             ft.Column(controls=[
                 ft.Container(content=
@@ -201,43 +203,43 @@ def main(page: ft.Page):
                         ft.Row(controls=[
                             ft.Container(width=20,bgcolor=ft.colors.TRANSPARENT),
                             ft.Container(content=ft.Container(content=
-                                ft.Text("Пример 1",size=25,text_align=ft.TextAlign.CENTER,color="#0f68ad"),
+                                ft.Text("Пример 1",size=25,text_align=ft.TextAlign.CENTER,color=ft.colors.WHITE),
                                 alignment=ft.alignment.center
                             ),
                             width=130,
                             height=83,
-                            bgcolor=ft.colors.WHITE,
+                            bgcolor=main_color_2,
                             border_radius=10,
                             on_click=lambda e: (primer1())
                         ),
                         ft.Container(content=ft.Container(content=
-                                ft.Text("Пример 2",size=25,text_align=ft.TextAlign.CENTER,color="#0f68ad"),
+                                ft.Text("Пример 2",size=25,text_align=ft.TextAlign.CENTER,color=ft.colors.WHITE),
                                 alignment=ft.alignment.center
                             ),
                             width=130,
                             height=83,
-                            bgcolor=ft.colors.WHITE,
+                            bgcolor=main_color_2,
                             border_radius=10
                         )]
                         ),
                         ft.Row(controls=[
                             ft.Container(width=20,bgcolor=ft.colors.TRANSPARENT),
                             ft.Container(content=ft.Container(content=
-                                    ft.Text("Пример 3",size=25,text_align=ft.TextAlign.CENTER,color="#0f68ad"),
+                                    ft.Text("Пример 3",size=25,text_align=ft.TextAlign.CENTER,color=ft.colors.WHITE),
                                     alignment=ft.alignment.center
                                 ),
                             width=130,
                             height=83,
-                            bgcolor=ft.colors.WHITE,
+                            bgcolor=main_color_2,
                             border_radius=10
                             ),
                             ft.Container(content=ft.Container(content=
-                                    ft.Text("Пример 4",size=25,text_align=ft.TextAlign.CENTER,color="#0f68ad"),
+                                    ft.Text("Пример 4",size=25,text_align=ft.TextAlign.CENTER,color=ft.colors.WHITE),
                                     alignment=ft.alignment.center
                                 ),
                             width=130,
                             height=83,
-                            bgcolor=ft.colors.WHITE,
+                            bgcolor=main_color_2,
                             border_radius=10,
                             )
                         ])
@@ -247,11 +249,12 @@ def main(page: ft.Page):
             ),
             theme=ft.Theme(color_scheme_seed=ft.colors.INDIGO),
             theme_mode=ft.ThemeMode.DARK,
-            bgcolor=ft.colors.SURFACE_VARIANT,
+            bgcolor=ft.colors.TRANSPARENT,
             padding=10,
             width=350,
             height=250,
-            border_radius=11
+            border_radius=11,
+            border=ft.border.all(3, main_color_2)
         )
     ])
     
@@ -310,35 +313,45 @@ def main(page: ft.Page):
         multiline=True,
         min_lines=1,
         color=ft.colors.WHITE,
-        border_color=ft.colors.TRANSPARENT,
-        width=300,
-        bgcolor="#0f68ad",
+        border_color=main_color_2,
+        width=290,
+        bgcolor=ft.colors.TRANSPARENT,
         border_radius=10,
+        border_width=3,
     )
     
     left_row_rr_down = ft.Container(
-        content=ft.Column(controls=[
-            ft.Row(controls=[
-                left_row_save_del_butts
-            ]),
-            ft.ElevatedButton(content=
-                ft.Text("Очистить",size=11,tooltip="Очищение всех контейнеров"),
-            bgcolor="#0f68ad",
-            on_click= lambda e: clear_all_containers(),
+        content=ft.Row(controls=[
+            #ft.ElevatedButton(content=
+            #    ft.Text("Очистить",size=11,tooltip="Очищение всех контейнеров", height=50),
+            #bgcolor="#0f68ad",
+            #on_click= lambda e: clear_all_containers(),
+            #),
+            ft.Container(
+                content= ft.Text(value="λ", size=20),
+                on_click= lambda e: put_lambda(),
+                width=55,
+                height=55,
+                bgcolor=ft.colors.TRANSPARENT,
+                border_radius=10,
+                alignment=ft.alignment.center,
+                border= ft.border.all(3, main_color_2)
             ),
             ft.Container(
-                content= ft.Text(value="λ"),
-                on_click= lambda e: put_lambda(),
-                width=50,
-                height=50,
-                bgcolor="#b54b64",
+                content= ft.IconButton(
+                    icon=ft.icons.DELETE_FOREVER_ROUNDED, tooltip="Очищение всех контейнеров", on_click= lambda e: clear_all_containers()),
+                on_click= lambda e: clear_all_containers(),
+                width=55,
+                height=55,
+                bgcolor=ft.colors.TRANSPARENT,
                 border_radius=10,
-                alignment=ft.alignment.center
+                alignment=ft.alignment.center,
+                border= ft.border.all(3, main_color_2)
             )
         ]),
         width=200,
         height=300,
-        alignment=ft.alignment.bottom_right,
+        alignment=ft.alignment.top_right,
         border_radius=10
     )
     
@@ -359,7 +372,7 @@ def main(page: ft.Page):
     
     left_row_instrucitons_container = ft.Container(
         content=left_row_right_column,
-        bgcolor="#8ecbfb",
+        bgcolor=main_color_3,
         width=800,
         height=800,
         border_radius=10,
@@ -386,7 +399,7 @@ def main(page: ft.Page):
     
     center_lenta_container = ft.Container(
         content = center_column_down,
-        bgcolor=main_color_1,
+        bgcolor=main_color_2,
         width=1000,
         height=120,
         alignment=ft.alignment.center,
