@@ -5,9 +5,11 @@ from Machine import Machine
 main_color_1 = "#1abc9c"
 main_color_2 = "#d35400"
 main_color_3 = "#34495e"
+#main_color_3 = "#6E6C78"
+
 
 def main(page: ft.Page):
-
+    #page.bgcolor = "#3B3A3D"
     machine = Machine()
     
     #
@@ -16,9 +18,6 @@ def main(page: ft.Page):
         machine.set_word(lenta_from_user.value)
         machine.set_instructions(left_row_instructions_field.value)
         a = machine.start_machine()
-        #if a is None:
-            #a = [{"lenta": "λλλλλλλλ", "position": 1}, {"lenta": "λλλλλλλλ", "position": 2}]
-        #print(f"Это состояние машины: {a}")
         return a
     
     #
@@ -40,12 +39,6 @@ def main(page: ft.Page):
     )
 
     def start_():
-        #machine.set_word(lenta_from_user.value)
-        #machine.set_instructions(left_row_instructions_field.value)
-        #try:
-        #    cur_state = machine.start_machine()[-1]
-        #except:
-        #    cur_state = ""
         cur_state = GLOBAL_INFO_MACHINE()[-1]["lenta"]
         print(cur_state)
         right_column_lenta.value = cur_state
@@ -75,14 +68,6 @@ def main(page: ft.Page):
         alignment=ft.alignment.bottom_center,
         margin=0
     )
-    
-#    step_field = ft.TextField(
- #       value="",
-  #      color= ft.colors.GREEN,
-   ##    height=40,
-     #   multiline=True,
-      #  disabled=True
-    #)
     
     step_field = ft.ListView(
         expand = 1,
@@ -116,7 +101,6 @@ def main(page: ft.Page):
                 ),
                 ft.Text(
                     value = cur_step["lenta"][cur_step["position"]:],
-                    #value=c[-1][c[1]:],
                     size=25,
                     height=30,
                     text_align=ft.TextAlign.CENTER,
@@ -258,41 +242,6 @@ def main(page: ft.Page):
         )
     ])
     
-    #пытался создать filePicker, но он отваливается и не работает
-    def insert_instructions_from_file(e: ft.FilePickerResultEvent):
-        left_row_instructions_field.value = (
-            " ".join(map(lambda f: f.name, e.files)) if e.files else " "
-        )
-        left_row_instructions_field.update()
-    
-    ins_inst_from_f_dialog = ft.FilePicker(),
-    #page.overlay.append(ins_inst_from_f_dialog)
-    #page.update()
-    
-    left_row_save_del_butts = ft.Container(
-        content=ft.Row(controls=[
-            ft.IconButton(
-                icon=ft.icons.SAVE,
-                icon_color="#0f68ad",
-                tooltip="Сохранить текущие инструкции в файл",
-                #on_click= lambda _: ins_inst_from_f_dialog.pick_files(allow_multiple=False),
-                width=47
-            ),
-            ft.IconButton(
-                icon=ft.icons.UPLOAD_FILE_SHARP,
-                icon_color="#b54b64",
-                tooltip="Загрузить инструкции из файла",
-                #on_click= lambda e: print("Вы типо что-то загрузили хз"),
-                width=30
-            )
-        ],
-            alignment=ft.CrossAxisAlignment.STRETCH
-        ),
-        width=100,
-        height=56,
-        border_radius=10,
-        bgcolor=ft.colors.WHITE,
-    )
     
     def clear_all_containers():
         left_row_instructions_field.value = ""
@@ -322,11 +271,6 @@ def main(page: ft.Page):
     
     left_row_rr_down = ft.Container(
         content=ft.Row(controls=[
-            #ft.ElevatedButton(content=
-            #    ft.Text("Очистить",size=11,tooltip="Очищение всех контейнеров", height=50),
-            #bgcolor="#0f68ad",
-            #on_click= lambda e: clear_all_containers(),
-            #),
             ft.Container(
                 content= ft.Text(value="λ", size=20),
                 on_click= lambda e: put_lambda(),
