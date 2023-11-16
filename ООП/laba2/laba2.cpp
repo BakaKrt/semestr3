@@ -34,8 +34,7 @@ int main() {
             n++;
         } while (fabs(result) >= eps);
 
-        if (x == x1)
-            cout << "\n";
+        if (x == x1) cout << "\n";
         cout << fixed << "     " << left << setw(23) << x << setw(24) << calc << setw(28) << sin(x)/x << setw(25) << n << endl;
     }
 }
