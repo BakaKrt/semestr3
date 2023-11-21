@@ -9,9 +9,29 @@ ld fx(ld x) {
     return x * x;
 }
 
-ld func_spr(int n, ld a, ld b) {
+void check_valid(int &n) {
+    if (n % 2 == 1)
+        n = n + 1;
+}
+
+ld func_str(int n, ld a, ld b) {
+    check_valid(n);
     vector<ld> xi; ld h = (b - a) / n;
-    for (a = 0; a <= 1; a += h) {
+    for (a = 0; a <= b; a += h) {
+        xi.push_back(a);
+    }
+
+    ld Str = 0, sumSTR = 0;
+    for (int i = 0; i <= n - 1; i++) {
+        Str += (h * (fx(xi[i]) + fx(xi[i + 1])) / 2);
+    }
+    return Str;
+}
+
+ld func_spr(int n, ld a, ld b) {
+    check_valid(n);
+    vector<ld> xi; ld h = (b - a) / n;
+    for (a = 0; a <= b; a += h) {
         xi.push_back(a);
     }
     ld Spr = 0;
@@ -22,12 +42,16 @@ ld func_spr(int n, ld a, ld b) {
 }
 
 ld func_ssimpson(int n, ld a, ld b) {
+    check_valid(n);
     vector<ld> xi; ld h = (b - a) / n;
+    for (a = 0; a <= b; a += h) {
+        xi.push_back(a);
+    }
+
     ld temp_sum_0 = 0, temp_sum_1 = 0;
     for (int i = 1; i < n; i += 2) {
         temp_sum_0 += fx(xi[i]);
     }
-
     for (int j = 2; j < n - 1; j += 2) {
         temp_sum_1 += fx(xi[j]);
     }
@@ -46,7 +70,23 @@ int main()
         xi.push_back(i);
     }
 
+    cout << func_str(n, a ,b) << endl;
+    cout << func_spr(n, a, b) << endl;
+    cout << func_ssimpson(n, a, b) << endl;
 
+    
+    for (int i = 4; ; i *= 2) {
+        ld runge = abs(func_spr(i, a, b) - func_spr(i / 2, a, b)) / (pow(2, 2) - 1);
+        cout << runge << endl;
+        if (runge < EPS) {
+            cout << "Для метода прямоугольников достаточно " << i << " итераций\n";
+            cout << "Конечный результат по методу прямоугольников: " << func_spr(i,a,b) << endl;
+            break;
+        }
+    }
+
+
+    /*
     ld Str = 0, sumSTR=0;
     for (int i = 1; i <= n; i++) {
         Str = h * (fx(xi[i-1]) + fx(xi[i]) )/2;
@@ -71,16 +111,18 @@ int main()
 
     Ssimp = (h / 3) * (fx(xi.front())+fx(xi.back())+4*(temp_sum_0) + 2 * (temp_sum_1));
     cout << Ssimp;
-
+    */
+    
     ld runge = 0; int i_res = 0;
     for (int i = 2; i < 100000; i *= 2) {
         runge = abs(func_spr(i, a ,b) - func_spr(i * 2, a, b)) / (pow(2, 2) - 1);
         if (runge < EPS) {
             break;
         }
-        i *= 2;
-        i_res = i;
+        //i *= 2;
+        i_res = 2*i;
     }
     cout << endl;
     cout << i_res;
+    
 }
