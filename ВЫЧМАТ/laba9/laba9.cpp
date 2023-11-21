@@ -21,6 +21,20 @@ ld func_spr(int n, ld a, ld b) {
     return Spr;
 }
 
+ld func_ssimpson(int n, ld a, ld b) {
+    vector<ld> xi; ld h = (b - a) / n;
+    ld temp_sum_0 = 0, temp_sum_1 = 0;
+    for (int i = 1; i < n; i += 2) {
+        temp_sum_0 += fx(xi[i]);
+    }
+
+    for (int j = 2; j < n - 1; j += 2) {
+        temp_sum_1 += fx(xi[j]);
+    }
+
+    return (h / 3) * (fx(xi.front()) + fx(xi.back()) + 4 * (temp_sum_0)+2 * (temp_sum_1));
+}
+
 int main()
 {
     setlocale(0, "");
@@ -59,12 +73,13 @@ int main()
     cout << Ssimp;
 
     ld runge = 0; int i_res = 0;
-    for (int i = 2; i < 100; i *= 2) {
-        runge = abs(func_spr(i, a ,b) - func_spr(i * 2, a, b)) / (pow(2, 4) - 1);
+    for (int i = 2; i < 100000; i *= 2) {
+        runge = abs(func_spr(i, a ,b) - func_spr(i * 2, a, b)) / (pow(2, 2) - 1);
         if (runge < EPS) {
             break;
         }
-        i_res = pow(2,i+1);
+        i *= 2;
+        i_res = i;
     }
     cout << endl;
     cout << i_res;

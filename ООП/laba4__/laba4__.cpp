@@ -17,7 +17,7 @@ public:
 int main()
 {
 	my_class my, *myptr = &my;
-	my_class(*ptr)() = (my_class::*print);
+	my_class(*ptr)() = (my_class::print);
 
 	void *void_ptr;
 	void_ptr = myptr;

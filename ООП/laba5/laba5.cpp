@@ -116,7 +116,7 @@ int* zadanie_3_2(int mas[], const int SIZE) {
 int zadanie_4(string a) {
     int k = 0;
     for (const auto& b : a) {
-        if (b > 0 || b < 9) {
+        if (b >= '0' and b <= '9') {
             k++;
         }
     }
@@ -203,7 +203,8 @@ void zadanie_9_print(type in[6][5]) {
         cout << endl << setw(0);
     }
 }
-
+//bool (dog:: *get_happy)(void) = &dog::is_happy;
+//using void(dog::*nazvanie)(арументы);
 int main()
 {
     setlocale(0, "");
@@ -267,7 +268,7 @@ int main()
         mas_[i] = x;
     }
     zadanie_3_print(mas_, SIZE_1);
-    printf("Количество элементов, лежащих в диапазоне от -1 до 45: %d\n", zadanie_3_0(mas_, SIZE_1, -45, -30));
+    printf("Количество элементов, лежащих в диапазоне от -45 до -30: %d\n", zadanie_3_0(mas_, SIZE_1, -45, -30));
     printf("Сумма элементов массива, лежащих после максимального элемента: %d\n", zadanie_3_1(mas_, SIZE_1));
     printf("Упорядоченные элементы массива по убыванию модулей элементов: ");
     zadanie_3_2(mas_, SIZE_1);
